@@ -2,6 +2,7 @@ package bg.softuni.cinevault.entities;
 
 import bg.softuni.cinevault.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ public class User {
     @Column
     private String lastName;
     @Column(unique=true,nullable=false)
+    @Email
     private String email;
     @Column(nullable=false)
     private String password;
