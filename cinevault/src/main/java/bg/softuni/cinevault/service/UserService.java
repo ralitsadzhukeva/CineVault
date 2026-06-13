@@ -1,7 +1,9 @@
 package bg.softuni.cinevault.service;
 
-import org.springframework.stereotype.Service;
+import bg.softuni.cinevault.dto.user.UserLoginDto;
+import bg.softuni.cinevault.dto.user.UserRegisterDto;
 
-@Service
 public interface UserService {
+    UserRegisterDto register(UserRegisterDto userRegisterDto);
+    UserLoginDto login(UserLoginDto userLoginDto);
 }

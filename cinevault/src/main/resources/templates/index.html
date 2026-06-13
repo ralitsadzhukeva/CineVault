@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineVault</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">🎬 CineVault</div>
+
+    <ul class="nav-links">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/movies}">Movies</a></li>
+        <li><a th:href="@{/login}">Login</a></li>
+        <li><a th:href="@{/register}">Register</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <div class="overlay"></div>
+
+    <div class="hero-content">
+        <h1>Your Personal Movie Vault</h1>
+
+        <p>
+            Discover movies, write reviews,
+            rate your favorites and build your watchlist.
+        </p>
+
+        <div class="hero-buttons">
+            <a th:href="@{/movies}" class="btn-primary">
+                Browse Movies
+            </a>
+
+            <a th:href="@{/register}" class="btn-secondary">
+                Join Now
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+
+    <div class="feature-card">
+        <h3>🎥 Explore</h3>
+        <p>
+            Browse movies by genre, director and release year.
+        </p>
+    </div>
+
+    <div class="feature-card">
+        <h3>⭐ Review</h3>
+        <p>
+            Share ratings and reviews with other movie fans.
+        </p>
+    </div>
+
+    <div class="feature-card">
+        <h3>📋 Watchlist</h3>
+        <p>
+            Save movies you want to watch later.
+        </p>
+    </div>
+
+</section>
+
+<footer>
+    <p>© 2026 CineVault</p>
+</footer>
+
+</body>
+</html>
