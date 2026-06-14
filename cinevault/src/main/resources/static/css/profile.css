@@ -1,0 +1,180 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    background-color: #0f172a;
+    color: white;
+    min-height: 100vh;
+}
+
+.navbar {
+    background: #111827;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px 50px;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+}
+
+.nav-links a:hover {
+    color: #f59e0b;
+}
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 60px 20px;
+}
+
+.profile-card {
+    width: 900px;
+    max-width: 100%;
+
+    background: #1e293b;
+
+    border-radius: 20px;
+
+    padding: 40px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: #334155;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 50px;
+}
+
+.profile-header h1 {
+    margin-bottom: 10px;
+}
+
+.profile-header p {
+    color: #cbd5e1;
+}
+
+.profile-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+
+    margin-bottom: 40px;
+
+    flex-wrap: wrap;
+}
+
+.info-box {
+    background: #334155;
+
+    min-width: 220px;
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+.label {
+    display: block;
+    margin-bottom: 10px;
+
+    color: #f59e0b;
+    font-weight: bold;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: #0f172a;
+
+    width: 220px;
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+.stat-card h2 {
+    font-size: 2.5rem;
+    color: #f59e0b;
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    color: #cbd5e1;
+}
+.actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    background: #f59e0b;
+    color: #0f172a;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+.btn:hover {
+    background: #d97706;
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | CineVault</title>
+
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">🎬 CineVault</div>
+
+    <ul class="nav-links">
+        <li><a th:href="@{/home}">Home</a></li>
+        <li><a th:href="@{/movies}">Movies</a></li>
+        <li><a th:href="@{/watchlist}">Watchlist</a></li>
+        <li><a th:href="@{/profile}">Profile</a></li>
+        <li><a th:href="@{/logout}">Logout</a></li>
+    </ul>
+</nav>
+
+<div class="profile-container">
+
+    <div class="profile-card">
+
+        <div class="profile-header">
+
+            <div class="avatar">
+                👤
+            </div>
+
+            <h1 th:text="${user.username}">
+                Username
+            </h1>
+
+            <p th:text="${user.email}">
+                user@email.com
+            </p>
+
+        </div>
+
+        <div class="profile-info">
+
+            <div class="info-box">
+                <span class="label">First Name</span>
+                <span th:text="${user.firstName != null && !user.firstName.isEmpty() ? user.firstName : 'Not specified'}">
+                    Not specified
+                </span>
+            </div>
+
+            <div class="info-box">
+                <span class="label">Last Name</span>
+                <span th:text="${user.lastName != null && !user.lastName.isEmpty() ? user.lastName : 'Not specified'}">
+                    Not specified
+                </span>
+            </div>
+
+            <div class="info-box">
+                <span class="label">Role</span>
+                <span th:text="${user.role}">
+                    USER
+                </span>
+            </div>
+
+            <div class="info-box">
+                <span class="label">Member Since</span>
+                <span th:text="${#temporals.format(user.createdOn, 'dd MMM yyyy')}">
+                    01 Jan 2026
+                </span>
+            </div>
+
+        </div>
+
+        <div class="stats">
+
+            <div class="stat-card">
+                <h2 th:text="${watchlistCount}">
+                    0
+                </h2>
+                <p>Watchlist Movies</p>
+            </div>
+
+            <div class="stat-card">
+                <h2 th:text="${reviewCount}">
+                    0
+                </h2>
+                <p>Reviews Written</p>
+            </div>
+
+            <div class="stat-card">
+                <h2 th:text="${averageRating}">
+                    0
+                </h2>
+                <p>Average Rating</p>
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <a th:href="@{/profile/edit}" class="btn">
+                Edit Profile
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

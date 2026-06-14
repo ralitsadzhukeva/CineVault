@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -43,7 +45,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserLoginDto login(UserLoginDto userLoginDto) {
-        return null;
+        User user = userRepository.findByUsername(userLoginDto.getUsername())
+                .orElseThrow(()-> new IllegalArgumentException("User not found"));
+        if (!passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Wrong password");
+        }
+
+        return UserLoginDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .build();
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+    @Override
+    public User findById(UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
 }

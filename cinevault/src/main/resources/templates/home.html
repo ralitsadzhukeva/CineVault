@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CineVault Home</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">🎬 CineVault</div>
+
+    <ul class="nav-links">
+        <li><a th:href="@{/home}">Home</a></li>
+        <li><a th:href="@{/movies}">Movies</a></li>
+        <li><a th:href="@{/watchlist}">My Watchlist</a></li>
+        <li><a th:href="@{/profile}">My Profile</a></li>
+        <li><a th:href="@{/logout}">Logout</a></li>
+    </ul>
+</nav>
+
+<section class="welcome">
+    <h1>Welcome back!</h1>
+
+    <p>
+        Discover new movies, review your favorites and
+        manage your personal watchlist.
+    </p>
+</section>
+
+<section class="dashboard">
+
+    <div class="card">
+        <h2>🎥 Movies</h2>
+        <p>Browse the movie collection.</p>
+        <a th:href="@{/movies}" class="btn">Explore</a>
+    </div>
+
+    <div class="card">
+        <h2>⭐ Reviews</h2>
+        <p>See ratings and reviews.</p>
+        <a href="#" class="btn">View Reviews</a>
+    </div>
+
+    <div class="card">
+        <h2>📋 Watchlist</h2>
+        <p>Manage your saved movies.</p>
+        <a th:href="@{/watchlist}" class="btn">Open Watchlist</a>
+    </div>
+
+</section>
+
+</body>
+</html>
