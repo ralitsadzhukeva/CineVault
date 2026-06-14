@@ -1,5 +1,6 @@
 package bg.softuni.cinevault.web;
 
+import bg.softuni.cinevault.dto.user.UserRegisterDto;
 import bg.softuni.cinevault.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -19,4 +20,5 @@ public class IndexController {
     public String index() {
         return "index";
     }
+
 }
