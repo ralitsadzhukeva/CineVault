@@ -61,6 +61,7 @@ public class AuthController {
                               BindingResult bindingResult,
                               HttpSession httpSession,
                               HttpServletResponse response) {
+
         if (bindingResult.hasErrors()) {
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("login");
@@ -69,6 +70,7 @@ public class AuthController {
 
         UserLoginDto user = userService.login(userLoginDto);
         httpSession.setAttribute("user_id", user.getId());
+        httpSession.setAttribute("user_role", user.getRole());
         return new ModelAndView("redirect:/home");
     }
 }

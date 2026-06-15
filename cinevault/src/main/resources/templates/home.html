@@ -47,7 +47,13 @@
         <p>Manage your saved movies.</p>
         <a th:href="@{/watchlist}" class="btn">Open Watchlist</a>
     </div>
+    <div th:if="${isAdmin}" class="card admin-panel">
+        <h2>🛠 Admin Panel</h2>
 
+        <a th:href="@{/movies/add}" class="btn">
+            ➕ Add Movie
+        </a>
+    </div>
 </section>
 
 </body>

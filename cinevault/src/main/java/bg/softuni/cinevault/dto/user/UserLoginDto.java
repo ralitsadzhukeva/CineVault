@@ -1,5 +1,6 @@
 package bg.softuni.cinevault.dto.user;
 
+import bg.softuni.cinevault.enums.Role;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -17,4 +18,5 @@ public class UserLoginDto {
     private String username;
     @NotBlank(message = "Password is required")
     private String password;
+    private Role role;
 }

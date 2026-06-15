@@ -1,5 +1,6 @@
 package bg.softuni.cinevault.dto.user;
 
+import bg.softuni.cinevault.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -23,4 +24,5 @@ public class UserRegisterDto {
     private String password;
     @NotBlank(message = "Confirm password is required")
     private String confirmPassword;
+    private Role role;
 }

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Movie | CineVault</title>
+
+    <link rel="stylesheet" th:href="@{/css/movie-add.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="movie-card">
+
+        <h1>🎬 CineVault</h1>
+        <h2>Add New Movie</h2>
+
+        <form th:action="@{/movies/add}"
+              th:object="${movieAddDto}"
+              method="post">
+
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text"
+                       th:field="*{title}"
+                       placeholder="Movie title">
+
+                <p class="error"
+                   th:if="${#fields.hasErrors('title')}"
+                   th:errors="*{title}">
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label>Director</label>
+                <input type="text"
+                       th:field="*{director}"
+                       placeholder="Director">
+
+                <p class="error"
+                   th:if="${#fields.hasErrors('director')}"
+                   th:errors="*{director}">
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label>Genre</label>
+
+                <select th:field="*{genre}">
+                    <option value="">Select Genre</option>
+                    <option th:each="genre : ${genres}"
+                            th:value="${genre}"
+                            th:text="${genre}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Release Year</label>
+                <input type="number"
+                       th:field="*{releaseYear}"
+                       placeholder="2025">
+
+                <p class="error"
+                   th:if="${#fields.hasErrors('releaseYear')}"
+                   th:errors="*{releaseYear}">
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label>Poster URL</label>
+                <input type="text"
+                       th:field="*{posterUrl}"
+                       placeholder="https://...">
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+
+                <textarea rows="5"
+                          th:field="*{description}"
+                          placeholder="Movie description">
+                </textarea>
+            </div>
+
+            <button type="submit" class="btn">
+                Add Movie
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

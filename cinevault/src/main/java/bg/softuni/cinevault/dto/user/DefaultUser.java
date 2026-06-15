@@ -1,6 +1,7 @@
 package bg.softuni.cinevault.dto.user;
 
 import bg.softuni.cinevault.entities.User;
+import bg.softuni.cinevault.enums.Role;
 import bg.softuni.cinevault.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -29,6 +30,7 @@ public class DefaultUser implements CommandLineRunner {
                 .email("admin@admin.com")
                 .password("adminPass")
                 .confirmPassword("adminPass")
+                .role(Role.ADMIN)
                 .build();
 
         userService.register(userRegisterDto);

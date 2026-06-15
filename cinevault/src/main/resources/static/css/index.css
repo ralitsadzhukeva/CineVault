@@ -151,3 +151,26 @@ footer {
     padding: 25px;
     background-color: #111827;
 }
+.admin-panel {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.admin-btn {
+    display: inline-block;
+    background: #f59e0b;
+
+    color: white;
+    text-decoration: none;
+
+    padding: 15px 25px;
+    border-radius: 10px;
+
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.admin-btn:hover {
+    background: #d97706;
+    transform: translateY(-2px);
+}

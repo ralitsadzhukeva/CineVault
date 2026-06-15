@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies - CineVault</title>
+    <link rel="stylesheet" th:href="@{/css/movies.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">🎬 CineVault</div>
+
+    <ul class="nav-links">
+        <li><a th:href="@{/home}">Home</a></li>
+        <li><a th:href="@{/movies}">Movies</a></li>
+        <li><a th:href="@{/watchlist}">My Watchlist</a></li>
+        <li><a th:href="@{/profile}">My Profile</a></li>
+    </ul>
+</nav>
+
+<section class="page-header">
+    <h1>🎥 Movies</h1>
+    <p>Explore the latest movies in your collection</p>
+
+    <a th:href="@{/movies/add}" class="btn">+ Add Movie</a>
+</section>
+
+<section class="movies-grid">
+
+    <div class="movie-card" th:each="movie : ${movies}">
+        <img th:src="${movie.posterUrl}" alt="Poster" class="poster">
+
+        <div class="movie-info">
+            <h2 th:text="${movie.title}">Movie Title</h2>
+
+            <p class="meta">
+                <span th:text="${movie.genre}">Genre</span> •
+                <span th:text="${movie.releaseYear}">2024</span>
+            </p>
+
+            <p class="description" th:text="${movie.description}">
+                Movie description goes here...
+            </p>
+
+            <div class="actions">
+                <a th:href="@{/movies/{id}(id=${movie.id})}" class="btn small">Details</a>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+</body>
+</html>

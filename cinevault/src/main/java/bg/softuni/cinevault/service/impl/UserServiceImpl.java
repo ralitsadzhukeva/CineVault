@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
                 .username(userRegisterDto.getUsername())
                 .email(userRegisterDto.getEmail())
                 .password(passwordEncoder.encode(userRegisterDto.getPassword()))
-                .role(Role.USER)
+                .role(userRegisterDto.getRole())
                 .createdOn(LocalDateTime.now())
                 .build();
 
@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserService {
         return UserLoginDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
+                .role(user.getRole())
                 .build();
     }
 
