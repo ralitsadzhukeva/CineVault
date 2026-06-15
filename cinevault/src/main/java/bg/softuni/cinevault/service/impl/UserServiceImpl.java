@@ -1,5 +1,6 @@
 package bg.softuni.cinevault.service.impl;
 
+import bg.softuni.cinevault.dto.user.UserEditDto;
 import bg.softuni.cinevault.dto.user.UserLoginDto;
 import bg.softuni.cinevault.dto.user.UserRegisterDto;
 import bg.softuni.cinevault.entities.User;
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
                 .username(userRegisterDto.getUsername())
                 .email(userRegisterDto.getEmail())
                 .password(passwordEncoder.encode(userRegisterDto.getPassword()))
-                .role(userRegisterDto.getRole())
+                .role(Role.USER)
                 .createdOn(LocalDateTime.now())
                 .build();
 
@@ -57,7 +58,30 @@ public class UserServiceImpl implements UserService {
                 .role(user.getRole())
                 .build();
     }
+    @Override
+    public UserEditDto getUserForEdit(UUID userId) {
 
+        User user = userRepository.findById(userId)
+                .orElseThrow();
+
+        return UserEditDto.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .build();
+    }
+    @Override
+    public void update(UUID userId, UserEditDto userEditDto) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow();
+
+        user.setFirstName(userEditDto.getFirstName());
+        user.setLastName(userEditDto.getLastName());
+        user.setEmail(userEditDto.getEmail());
+
+        userRepository.save(user);
+    }
     @Override
     public List<User> findAll() {
         return userRepository.findAll();

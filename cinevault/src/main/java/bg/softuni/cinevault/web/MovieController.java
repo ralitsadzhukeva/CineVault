@@ -42,4 +42,12 @@ public class MovieController {
 
         return new ModelAndView("redirect:/movies");
     }
+    @GetMapping("/movies")
+    public ModelAndView movies() {
+        ModelAndView mav = new ModelAndView("movies");
+
+        mav.addObject("movies", movieService.findAll());
+
+        return mav;
+    }
 }

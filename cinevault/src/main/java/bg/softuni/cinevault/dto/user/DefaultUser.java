@@ -34,7 +34,7 @@ public class DefaultUser implements CommandLineRunner {
                 .build();
 
         userService.register(userRegisterDto);
-
+        userRegisterDto.setRole(Role.ADMIN);
         log.info("Default user created with username [%s] and password [%s].".formatted(
                 userRegisterDto.getUsername(), userRegisterDto.getPassword()));
     }

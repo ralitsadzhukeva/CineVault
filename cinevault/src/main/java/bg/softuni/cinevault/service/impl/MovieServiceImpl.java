@@ -33,11 +33,13 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> findAll() {
-        return List.of();
+        return movieRepository.findAll();
     }
 
     @Override
     public Movie findById(UUID id) {
-        return null;
+        return movieRepository
+                .findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("Movie not found"));
     }
 }

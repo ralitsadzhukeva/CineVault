@@ -20,16 +20,18 @@
 
 <section class="page-header">
     <h1>🎥 Movies</h1>
-    <p>Explore the latest movies in your collection</p>
+    <p>Explore new movies!</p>
 
-    <a th:href="@{/movies/add}" class="btn">+ Add Movie</a>
 </section>
 
 <section class="movies-grid">
 
     <div class="movie-card" th:each="movie : ${movies}">
-        <img th:src="${movie.posterUrl}" alt="Poster" class="poster">
-
+        <img th:src="${movie.posterUrl != null && !movie.posterUrl.isEmpty()
+              ? movie.posterUrl
+              : '/images/default-poster.jpg'}"
+             alt="Poster"
+             class="poster">
         <div class="movie-info">
             <h2 th:text="${movie.title}">Movie Title</h2>
 
@@ -43,7 +45,9 @@
             </p>
 
             <div class="actions">
-                <a th:href="@{/movies/{id}(id=${movie.id})}" class="btn small">Details</a>
+                <a th:href="@{/movies/{id}(id=${movie.id})}" class="btn small">Add to watchlist</a>
+                <a th:href="@{/movies/{id}(id=${movie.id})}" class="btn small">Rate</a>
+
             </div>
         </div>
     </div>
