@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Watchlist - CineVault</title>
+    <link rel="stylesheet" th:href="@{/css/watchlist.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">🎬 CineVault</div>
+
+    <ul class="nav-links">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/movies}">Movies</a></li>
+        <li><a th:href="@{/watchlist}">My Watchlist</a></li>
+        <li><a th:href="@{/profile}">My Profile</a></li>
+    </ul>
+</nav>
+
+<section class="page-header">
+    <h1>📋 My Watchlist</h1>
+    <p>Your saved movies to watch later.</p>
+</section>
+
+<section class="movies-grid">
+
+    <div class="movie-card"
+         th:each="entry : ${watchlist}">
+
+        <img th:src="${entry.movie.posterUrl != null && !entry.movie.posterUrl.isEmpty()
+                    ? entry.movie.posterUrl
+                    : '/images/default-poster.jpg'}"
+             alt="Poster"
+             class="poster">
+
+        <div class="movie-info">
+
+            <h2 th:text="${entry.movie.title}">
+                Movie Title
+            </h2>
+
+            <p class="meta">
+                <span th:text="${entry.movie.genre}">
+                    Genre
+                </span>
+                •
+                <span th:text="${entry.movie.releaseYear}">
+                    2025
+                </span>
+            </p>
+
+            <p class="description"
+               th:text="${entry.movie.description}">
+                Movie description...
+            </p>
+
+            <div class="actions">
+
+                <a th:href="@{/watchlist/remove/{id}(id=${entry.id})}"
+                   class="btn danger">
+                    Remove
+                </a>
+                <a th:href="@{/watchlist/watched/{id}(id=${entry.id})}"
+                   class="btn"
+                   th:classappend="${entry.watched} ? 'disabled' : ''">
+                    <span th:text="${entry.watched} ? 'Watched ✓' : 'Mark as Watched'">
+                      Mark as Watched
+                     </span>
+                </a>
+                <a th:if="${entry.watched}"
+                   th:href="@{/watchlist/rate/{id}(id=${entry.id})}"
+                   class="btn rate-btn">
+                    ⭐ Rate
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<div th:if="${#lists.isEmpty(watchlist)}"
+     class="empty-watchlist">
+
+    <h2>No movies in your watchlist yet.</h2>
+
+    <a th:href="@{/movies}" class="btn">
+        Browse Movies
+    </a>
+
+</div>
+
+</body>
+</html>

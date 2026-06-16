@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WatchList {
+public class Watchlist {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
