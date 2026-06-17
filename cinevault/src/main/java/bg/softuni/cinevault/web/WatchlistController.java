@@ -19,6 +19,7 @@ public class WatchlistController {
     }
     @GetMapping("/watchlist/remove/{movieId}")
     public String removeMovie(@PathVariable UUID movieId, HttpSession session) {
+
         if (session.getAttribute("user_id") == null) {
             return "redirect:/login";
         }

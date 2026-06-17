@@ -3,20 +3,26 @@ package bg.softuni.cinevault.web;
 import bg.softuni.cinevault.dto.movie.MovieAddDto;
 import bg.softuni.cinevault.enums.Genre;
 import bg.softuni.cinevault.service.MovieService;
+import bg.softuni.cinevault.service.ReviewService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.UUID;
 
 @Controller
 public class MovieController {
     private final MovieService movieService;
+    private final ReviewService reviewService;
 
-    public MovieController(MovieService movieService) {
+    public MovieController(MovieService movieService, ReviewService reviewService) {
         this.movieService = movieService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/movies/add")
@@ -48,6 +54,16 @@ public class MovieController {
 
         mav.addObject("movies", movieService.findAll());
 
+        return mav;
+    }
+    @GetMapping("/movies/{id}")
+    public ModelAndView details(@PathVariable UUID id) {
+
+        ModelAndView mav = new ModelAndView("movies");
+
+        mav.addObject( "movie", movieService.findById(id));
+
+        mav.addObject("reviews", reviewService.getMovieReviews(id));
         return mav;
     }
 }

@@ -9,7 +9,6 @@
 
 <nav class="navbar">
     <div class="logo">🎬 CineVault</div>
-
     <ul class="nav-links">
         <li><a th:href="@{/home}">Home</a></li>
         <li><a th:href="@{/movies}">Movies</a></li>
@@ -57,17 +56,17 @@
                     Login to add to watchlist
                 </a>
 
-                <a th:if="${session.user_id != null}"
-                   th:href="@{/watchlist/add/{id}(id=${movie.id})}"
-                   class="btn small">
-                    Rate
-                </a>
+<!--                <a th:if="${session.user_id != null}"-->
+<!--                   th:href="@{/watchlist/add/{id}(id=${movie.id})}"-->
+<!--                   class="btn small">-->
+<!--                    Rate-->
+<!--                </a>-->
 
-                <a th:if="${session.user_id == null}"
-                   th:href="@{/login}"
-                   class="btn small">
-                    Login to rate
-                </a>
+<!--                <a th:if="${session.user_id == null}"-->
+<!--                   th:href="@{/login}"-->
+<!--                   class="btn small">-->
+<!--                    Login to rate-->
+<!--                </a>-->
             </div>
         </div>
     </div>

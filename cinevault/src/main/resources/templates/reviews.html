@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Reviews - CineVault</title>
+
+    <link rel="stylesheet" th:href="@{/css/reviews.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">🎬 CineVault</div>
+
+    <ul class="nav-links">
+        <li><a th:href="@{/home}">Home</a></li>
+        <li><a th:href="@{/movies}">Movies</a></li>
+        <li><a th:href="@{/watchlist}">Watchlist</a></li>
+        <li><a th:href="@{/profile}">Profile</a></li>
+    </ul>
+</nav>
+
+<!-- HEADER -->
+<section class="page-header">
+    <h1>⭐ My Reviews</h1>
+    <p>All your movie ratings and thoughts</p>
+</section>
+
+<!-- REVIEWS GRID -->
+<section class="movies-grid reviews-grid">
+
+    <div class="review-card" th:each="review : ${reviews}">
+
+        <h2 th:text="${review.movie.title}">
+            Movie Title
+        </h2>
+
+        <div class="review-rating">
+            ⭐ <span th:text="${review.rating}"></span>/10
+        </div>
+
+        <p class="review-comment"
+           th:text="${review.comment}">
+            Your comment goes here...
+        </p>
+
+    </div>
+
+</section>
+
+<div th:if="${#lists.isEmpty(reviews)}"
+     class="empty-watchlist">
+
+    <h2>You haven't written any reviews yet.</h2>
+
+    <a th:href="@{/movies}" class="btn">
+        Browse Movies
+    </a>
+
+</div>
+
+</body>
+</html>

@@ -2,7 +2,9 @@ package bg.softuni.cinevault.web;
 
 import bg.softuni.cinevault.dto.user.UserEditDto;
 import bg.softuni.cinevault.entities.User;
+import bg.softuni.cinevault.service.ReviewService;
 import bg.softuni.cinevault.service.UserService;
+import bg.softuni.cinevault.service.WatchlistService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +17,13 @@ import java.util.UUID;
 @Controller
 public class ProfileController {
     private final UserService userService;
+    private final WatchlistService watchlistService;
+    private final ReviewService reviewService;
 
-    public ProfileController(UserService userService) {
+    public ProfileController(UserService userService, WatchlistService watchlistService, ReviewService reviewService) {
         this.userService = userService;
+        this.watchlistService = watchlistService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/profile")
@@ -29,20 +35,25 @@ public class ProfileController {
             return new ModelAndView("redirect:/login");
         }
 
-        User user = userService.findById(userId);
+        ModelAndView mav = new ModelAndView("profile");
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("profile");
+        mav.addObject("user", userService.findById(userId));
 
-        modelAndView.addObject("user", user);
+        mav.addObject("watchlistCount",
+                watchlistService.getUserWatchlist(userId).size());
 
-        return modelAndView;
+        mav.addObject("reviewCount",
+                reviewService.getUserReviews(userId).size());
+
+        return mav;
     }
     @GetMapping("/profile/edit")
     public ModelAndView editProfile(HttpSession session) {
 
         UUID userId = (UUID) session.getAttribute("user_id");
-
+        if (userId == null) {
+            return new ModelAndView("redirect:/login");
+        }
         UserEditDto userEditDto =
                 userService.getUserForEdit(userId);
 

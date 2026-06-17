@@ -58,10 +58,8 @@ body {
 
 .movies-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-
+    grid-template-columns: repeat(3, 1fr);
     gap: 25px;
-
     padding: 30px 50px;
 }
 
@@ -145,4 +143,43 @@ body {
 
 .empty-watchlist h2 {
     margin-bottom: 20px;
+}
+.review-box {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #111827;
+    border: 1px solid #374151;
+    border-radius: 10px;
+}
+
+.review-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.review-box input[type="number"],
+.review-box input[type="text"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #374151;
+    background-color: #1f2937;
+    color: white;
+    outline: none;
+}
+
+.review-box input:focus {
+    border-color: #f59e0b;
+}
+
+.review-box button {
+    align-self: flex-start;
+}
+
+.review-box::before {
+    content: "Leave a Review";
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #f59e0b;
 }

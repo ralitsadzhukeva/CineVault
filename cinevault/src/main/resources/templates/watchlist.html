@@ -68,11 +68,28 @@
                       Mark as Watched
                      </span>
                 </a>
-                <a th:if="${entry.watched}"
-                   th:href="@{/watchlist/rate/{id}(id=${entry.id})}"
-                   class="btn rate-btn">
-                    ⭐ Rate
-                </a>
+                <div th:if="${entry.watched}" class="review-box">
+                    <form th:action="@{/review/add/{movieId}(movieId=${entry.movie.id})}"
+                          method="post">
+
+                        <input type="number"
+                               name="rating"
+                               min="1"
+                               max="10"
+                               placeholder="Rating"
+                               required>
+
+                        <input type="text"
+                               name="comment"
+                               placeholder="Write comment">
+
+                        <button type="submit" class="btn rate-btn">
+                            ⭐ Submit Review
+                        </button>
+
+                    </form>
+
+                </div>
             </div>
 
         </div>
