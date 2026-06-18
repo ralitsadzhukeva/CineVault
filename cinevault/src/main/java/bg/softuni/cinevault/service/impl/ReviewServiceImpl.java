@@ -7,6 +7,7 @@ import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.repository.UserRepository;
 import bg.softuni.cinevault.service.ReviewService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,5 +50,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<Review> getUserReviews(UUID id) {
         return reviewRepository.findByUserId(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteReviewsByMovieId(UUID movieId) {
+        reviewRepository.deleteByMovieId(movieId);
     }
 }

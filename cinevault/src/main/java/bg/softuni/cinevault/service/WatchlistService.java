@@ -11,4 +11,5 @@ public interface WatchlistService {
     List<Watchlist> getUserWatchlist(UUID userId);
     void removeMovie(UUID watchlistId);
     void markAsWatched(UUID watchlistId);
+    void deleteAllByMovie(UUID movieId);
 }

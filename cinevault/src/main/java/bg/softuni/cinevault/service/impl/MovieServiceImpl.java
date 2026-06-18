@@ -4,6 +4,9 @@ import bg.softuni.cinevault.dto.movie.MovieAddDto;
 import bg.softuni.cinevault.entities.Movie;
 import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.service.MovieService;
+import bg.softuni.cinevault.service.ReviewService;
+import bg.softuni.cinevault.service.WatchlistService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +15,13 @@ import java.util.UUID;
 @Service
 public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
+    private final ReviewService reviewService;
+    private final WatchlistService watchlistService;
 
-    public MovieServiceImpl(MovieRepository movieRepository) {
+    public MovieServiceImpl(MovieRepository movieRepository, ReviewService reviewService, WatchlistService watchlistService) {
         this.movieRepository = movieRepository;
+        this.reviewService = reviewService;
+        this.watchlistService = watchlistService;
     }
 
     @Override
@@ -41,5 +48,13 @@ public class MovieServiceImpl implements MovieService {
         return movieRepository
                 .findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("Movie not found"));
+    }
+
+    @Override
+    @Transactional
+    public void deleteMovie(UUID id) {
+        watchlistService.deleteAllByMovie(id);
+        reviewService.deleteReviewsByMovieId(id);
+        movieRepository.deleteById(id);
     }
 }

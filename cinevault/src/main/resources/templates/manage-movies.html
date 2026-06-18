@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Movies</title>
+
+    <link rel="stylesheet" th:href="@{/css/manage-movies.css}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <a class="back" th:href="@{/movies}">← Back to Movies</a>
+
+    <h1>Manage Movies</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Release Date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="movie : ${movies}">
+            <td th:text="${movie.title}"></td>
+            <td th:text="${movie.genre}"></td>
+            <td th:text="${movie.releaseYear}"></td>
+
+            <td>
+                <div class="actions">
+                    <form th:action="@{/movies/delete/{id}(id=${movie.id})}" method="post">
+                        <button class="btn delete"
+                                type="submit"
+                                onclick="return confirm('Are you sure?')">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>

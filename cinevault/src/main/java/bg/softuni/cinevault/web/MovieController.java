@@ -2,8 +2,10 @@ package bg.softuni.cinevault.web;
 
 import bg.softuni.cinevault.dto.movie.MovieAddDto;
 import bg.softuni.cinevault.enums.Genre;
+import bg.softuni.cinevault.enums.Role;
 import bg.softuni.cinevault.service.MovieService;
 import bg.softuni.cinevault.service.ReviewService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -57,7 +59,7 @@ public class MovieController {
         return mav;
     }
     @GetMapping("/movies/{id}")
-    public ModelAndView details(@PathVariable UUID id) {
+    public ModelAndView reviews(@PathVariable UUID id) {
 
         ModelAndView mav = new ModelAndView("movies");
 
@@ -65,5 +67,29 @@ public class MovieController {
 
         mav.addObject("reviews", reviewService.getMovieReviews(id));
         return mav;
+    }
+    @GetMapping("/movies/manage")
+    public ModelAndView manageMovies() {
+
+        ModelAndView mav = new ModelAndView("manage-movies");
+
+        mav.addObject("movies", movieService.findAll());
+
+        return mav;
+    }
+    @PostMapping("/movies/delete/{id}")
+    public String deleteMovie(@PathVariable UUID id, HttpSession session) {
+
+        if (session.getAttribute("user_id") == null) {
+            return "redirect:/login";
+        }
+
+        if (session.getAttribute("user_role") != Role.ADMIN) {
+            return "redirect:/movies";
+        }
+
+        movieService.deleteMovie(id);
+
+        return "redirect:/movies";
     }
 }

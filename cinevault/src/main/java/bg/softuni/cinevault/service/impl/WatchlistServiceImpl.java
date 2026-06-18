@@ -64,4 +64,12 @@ public class WatchlistServiceImpl implements WatchlistService {
 
         watchlistRepository.save(entry);
     }
+
+    @Override
+    public void deleteAllByMovie(UUID movieId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow();
+
+        watchlistRepository.deleteByMovie(movie);
+    }
 }

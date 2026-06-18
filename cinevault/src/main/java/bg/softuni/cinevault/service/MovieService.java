@@ -13,4 +13,5 @@ public interface MovieService {
     List<Movie> findAll();
 
     Movie findById(UUID id);
+    void deleteMovie(UUID id);
 }

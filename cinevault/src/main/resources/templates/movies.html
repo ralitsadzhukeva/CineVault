@@ -55,8 +55,20 @@
                    class="btn small">
                     Login to add to watchlist
                 </a>
+                <form th:if="${session.user_role != null
+                 and session.user_role.name() == 'ADMIN'}"
+                      th:action="@{/movies/delete/{id}(id=${movie.id})}"
+                      method="post">
 
-<!--                <a th:if="${session.user_id != null}"-->
+                    <button type="submit"
+                            class="btn danger">
+                        Delete
+                    </button>
+
+                </form>
+
+
+                <!--                <a th:if="${session.user_id != null}"-->
 <!--                   th:href="@{/watchlist/add/{id}(id=${movie.id})}"-->
 <!--                   class="btn small">-->
 <!--                    Rate-->
@@ -68,6 +80,7 @@
 <!--                    Login to rate-->
 <!--                </a>-->
             </div>
+
         </div>
     </div>
 

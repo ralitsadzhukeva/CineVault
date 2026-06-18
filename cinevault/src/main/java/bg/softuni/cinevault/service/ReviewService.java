@@ -10,4 +10,5 @@ public interface ReviewService {
     void addReview(UUID movieId, UUID userId,Integer rating ,String comment);
     List<Review> getMovieReviews(UUID movieId);
     List<Review> getUserReviews(UUID id);
+    void deleteReviewsByMovieId(UUID movieId);
 }
