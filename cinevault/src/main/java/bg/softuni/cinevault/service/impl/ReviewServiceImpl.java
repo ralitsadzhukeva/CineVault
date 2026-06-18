@@ -57,4 +57,16 @@ public class ReviewServiceImpl implements ReviewService {
     public void deleteReviewsByMovieId(UUID movieId) {
         reviewRepository.deleteByMovieId(movieId);
     }
+
+    @Override
+    public double getAverageRating(UUID movieId) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow();
+
+        List<Review> reviews = reviewRepository.findByMovie(movie);
+
+        return reviews.stream()
+                .mapToInt(Review::getRating)
+                .average()
+                .orElse(0);
+    }
 }

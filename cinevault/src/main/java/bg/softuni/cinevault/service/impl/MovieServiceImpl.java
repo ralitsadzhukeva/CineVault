@@ -1,6 +1,7 @@
 package bg.softuni.cinevault.service.impl;
 
 import bg.softuni.cinevault.dto.movie.MovieAddDto;
+import bg.softuni.cinevault.dto.movie.MovieEditDto;
 import bg.softuni.cinevault.entities.Movie;
 import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.service.MovieService;
@@ -56,5 +57,34 @@ public class MovieServiceImpl implements MovieService {
         watchlistService.deleteAllByMovie(id);
         reviewService.deleteReviewsByMovieId(id);
         movieRepository.deleteById(id);
+    }
+
+    @Override
+    public MovieEditDto getMovieForEdit(UUID id) {
+        Movie movie = movieRepository.findById(id).orElseThrow();
+        MovieEditDto movieEditDto = new MovieEditDto();
+
+        movieEditDto.setTitle(movie.getTitle());
+        movieEditDto.setDirector(movie.getDirector());
+        movieEditDto.setGenre(movie.getGenre());
+        movieEditDto.setReleaseYear(movie.getReleaseYear());
+        movieEditDto.setDescription(movie.getDescription());
+        movieEditDto.setPosterUrl(movie.getPosterUrl());
+
+        return movieEditDto;
+    }
+
+    @Override
+    public void updateMovie(UUID id, MovieEditDto movieEditDto) {
+        Movie movie = movieRepository.findById(id).orElseThrow();
+
+        movie.setTitle(movieEditDto.getTitle());
+        movie.setDirector(movieEditDto.getDirector());
+        movie.setGenre(movieEditDto.getGenre());
+        movie.setReleaseYear(movieEditDto.getReleaseYear());
+        movie.setDescription(movieEditDto.getDescription());
+        movie.setPosterUrl(movieEditDto.getPosterUrl());
+
+        movieRepository.save(movie);
     }
 }

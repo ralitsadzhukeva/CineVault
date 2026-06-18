@@ -31,7 +31,7 @@ public class ReviewController {
 
         reviewService.addReview(movieId, userId, rating, comment);
 
-        return "redirect:/reviews" ;
+        return "redirect:/movies/" + movieId;
     }
     @GetMapping("/reviews")
     public ModelAndView userReviews(HttpSession session) {

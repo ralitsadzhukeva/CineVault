@@ -40,6 +40,10 @@
                             Delete
                         </button>
                     </form>
+                    <a th:href="@{/movies/edit/{id}(id=${movie.id})}"
+                       class="btn">
+                        Edit
+                    </a>
                 </div>
             </td>
         </tr>

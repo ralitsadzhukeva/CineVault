@@ -11,4 +11,5 @@ public interface ReviewService {
     List<Review> getMovieReviews(UUID movieId);
     List<Review> getUserReviews(UUID id);
     void deleteReviewsByMovieId(UUID movieId);
+    double getAverageRating(UUID movieId);
 }

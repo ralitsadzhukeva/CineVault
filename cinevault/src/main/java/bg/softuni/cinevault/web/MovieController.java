@@ -1,6 +1,7 @@
 package bg.softuni.cinevault.web;
 
 import bg.softuni.cinevault.dto.movie.MovieAddDto;
+import bg.softuni.cinevault.dto.movie.MovieEditDto;
 import bg.softuni.cinevault.enums.Genre;
 import bg.softuni.cinevault.enums.Role;
 import bg.softuni.cinevault.service.MovieService;
@@ -43,7 +44,12 @@ public class MovieController {
             BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return new ModelAndView("movie-add");
+
+            ModelAndView mav = new ModelAndView("movie-add");
+
+            mav.addObject("genres", Genre.values());
+
+            return mav;
         }
 
         movieService.add(movieAddDto);
@@ -59,15 +65,16 @@ public class MovieController {
         return mav;
     }
     @GetMapping("/movies/{id}")
-    public ModelAndView reviews(@PathVariable UUID id) {
+    public ModelAndView movieDetails(@PathVariable UUID id) {
 
-        ModelAndView mav = new ModelAndView("movies");
+        ModelAndView mav = new ModelAndView("movie-details");
 
-        mav.addObject( "movie", movieService.findById(id));
-
-        mav.addObject("reviews", reviewService.getMovieReviews(id));
+        mav.addObject("movie", movieService.findById(id));
+        mav.addObject( "reviews",reviewService.getMovieReviews(id));
+        mav.addObject("averageRating", reviewService.getAverageRating(id));
         return mav;
     }
+
     @GetMapping("/movies/manage")
     public ModelAndView manageMovies() {
 
@@ -90,6 +97,41 @@ public class MovieController {
 
         movieService.deleteMovie(id);
 
-        return "redirect:/movies";
+        return "redirect:/movies/manage";
+    }
+    @GetMapping("/movies/edit/{id}")
+    public ModelAndView editMovie(@PathVariable UUID id,
+                                  HttpSession session) {
+
+        if (session.getAttribute("user_role") == null ||  !session.getAttribute("user_role").toString().equals("ADMIN")) {
+            return new ModelAndView("redirect:/movies");
+        }
+
+        ModelAndView mav = new ModelAndView("movie-edit");
+
+        mav.addObject("movieEditDto", movieService.getMovieForEdit(id));
+        mav.addObject("genres", Genre.values());
+        mav.addObject("movieId", id);
+
+        return mav;
+    }
+    @PostMapping("/movies/edit/{id}")
+    public ModelAndView editMovie(@PathVariable UUID id, @Valid MovieEditDto movieEditDto, BindingResult bindingResult, HttpSession session) {
+
+        if (session.getAttribute("user_role") == null || !session.getAttribute("user_role").toString().equals("ADMIN")) {
+            return new ModelAndView("redirect:/movies");
+        }
+
+        if (bindingResult.hasErrors()) {
+            ModelAndView mav = new ModelAndView("movie-edit");
+
+            mav.addObject("genres", Genre.values());
+            mav.addObject("movieId", id);
+
+            return mav;
+        }
+
+        movieService.updateMovie(id, movieEditDto);
+        return new ModelAndView("redirect:/movies/manage");
     }
 }
