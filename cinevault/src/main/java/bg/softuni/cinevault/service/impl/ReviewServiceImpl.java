@@ -69,4 +69,22 @@ public class ReviewServiceImpl implements ReviewService {
                 .average()
                 .orElse(0);
     }
+
+    @Override
+    public void deleteReview(UUID id) {
+        reviewRepository.deleteById(id);
+    }
+
+    @Override
+    public void editReview(UUID id, Integer rating, String comment) {
+        Review review = reviewRepository.findById(id).orElseThrow();
+        review.setRating(rating);
+        review.setComment(comment);
+        reviewRepository.save(review);
+    }
+
+    @Override
+    public Review findById(UUID id) {
+        return reviewRepository.findById(id).orElseThrow();
+    }
 }

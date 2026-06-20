@@ -30,9 +30,7 @@
 
     <div class="review-card" th:each="review : ${reviews}">
 
-        <h2 th:text="${review.movie.title}">
-            Movie Title
-        </h2>
+        <h2 th:text="${review.movie.title}">Movie Title</h2>
 
         <div class="review-rating">
             ⭐ <span th:text="${review.rating}"></span>/10
@@ -42,6 +40,21 @@
            th:text="${review.comment}">
             Your comment goes here...
         </p>
+
+        <!-- ACTION BUTTONS (FIXED) -->
+        <div class="actions">
+
+            <a th:href="@{/reviews/edit/{id}(id=${review.id})}"
+               class="btn edit">
+                Edit
+            </a>
+
+            <a th:href="@{/reviews/delete/{id}(id=${review.id})}"
+               class="btn danger">
+                Delete
+            </a>
+
+        </div>
 
     </div>
 

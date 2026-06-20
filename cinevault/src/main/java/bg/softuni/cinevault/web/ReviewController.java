@@ -1,5 +1,6 @@
 package bg.softuni.cinevault.web;
 
+import bg.softuni.cinevault.entities.Review;
 import bg.softuni.cinevault.service.ReviewService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -48,5 +49,29 @@ public class ReviewController {
                 reviewService.getUserReviews(userId));
 
         return mav;
+    }
+    @GetMapping("/reviews/delete/{id}")
+    public String deleteReview(@PathVariable UUID id, HttpSession session) {
+        if (session.getAttribute("user_id") == null) {
+            return "redirect:/login";
+        }
+        reviewService.deleteReview(id);
+
+        return "redirect:/reviews";
+    }
+    @GetMapping("/reviews/edit/{id}")
+    public ModelAndView editReview(@PathVariable UUID id, HttpSession session) {
+        ModelAndView mav = new ModelAndView("review-edit");
+
+        Review review = reviewService.findById(id);
+        mav.addObject("review", review);
+
+        return mav;
+    }
+    @PostMapping("/reviews/edit/{id}")
+    public String editReviewConfirm(@PathVariable UUID id, @RequestParam Integer rating, @RequestParam String comment, HttpSession session) {
+        reviewService.editReview(id, rating, comment);
+
+        return "redirect:/reviews";
     }
 }

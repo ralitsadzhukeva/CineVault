@@ -12,4 +12,7 @@ public interface ReviewService {
     List<Review> getUserReviews(UUID id);
     void deleteReviewsByMovieId(UUID movieId);
     double getAverageRating(UUID movieId);
+    void deleteReview(UUID id);
+    void editReview(UUID id, Integer rating, String comment);
+    Review findById(UUID id);
 }
