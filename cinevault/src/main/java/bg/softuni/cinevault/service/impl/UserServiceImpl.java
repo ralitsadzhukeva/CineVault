@@ -47,9 +47,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserLoginDto login(UserLoginDto userLoginDto) {
         User user = userRepository.findByUsername(userLoginDto.getUsername())
-                .orElseThrow(()-> new IllegalArgumentException("User not found"));
-        if (!passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Wrong password");
+                .orElse(null);
+
+        if (user == null) {
+            return null;
+        }
+
+        if (!passwordEncoder.matches(
+                userLoginDto.getPassword(),
+                user.getPassword())) {
+
+            return null;
         }
 
         return UserLoginDto.builder()

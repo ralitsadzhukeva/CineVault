@@ -111,7 +111,7 @@ body {
     text-decoration: underline;
 }
 
-.error-message {
+.alert-warning {
     background: rgba(239, 68, 68, 0.15);
     color: #fca5a5;
 

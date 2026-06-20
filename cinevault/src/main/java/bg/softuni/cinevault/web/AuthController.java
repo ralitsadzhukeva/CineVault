@@ -69,8 +69,18 @@ public class AuthController {
         }
 
         UserLoginDto user = userService.login(userLoginDto);
+
+        if (user == null) {
+            ModelAndView modelAndView = new ModelAndView("login");
+
+            modelAndView.addObject("userLoginDto", userLoginDto);
+            modelAndView.addObject("loginError", "Invalid username or password!");
+
+            return modelAndView;
+        }
         httpSession.setAttribute("user_id", user.getId());
         httpSession.setAttribute("user_role", user.getRole());
+
         return new ModelAndView("redirect:/home");
     }
 }

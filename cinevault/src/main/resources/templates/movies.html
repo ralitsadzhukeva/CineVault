@@ -13,6 +13,7 @@
         <li><a th:href="@{/home}">Home</a></li>
         <li><a th:href="@{/movies}">Movies</a></li>
         <li th:if="${session.user_id != null}"><a th:href="@{/watchlist}">My Watchlist</a></li>
+        <li><a th:href="@{/reviews}">My Reviews</a></li>
         <li><a th:href="@{/profile}">My Profile</a></li>
     </ul>
 </nav>
@@ -20,11 +21,24 @@
 <section class="page-header">
     <h1>🎥 Movies</h1>
     <p>Explore new movies!</p>
+    <form th:action="@{/movies}" method="get" class="search-form">
 
+        <input type="text"
+               name="search"
+               th:value="${search}"
+               placeholder="Search movies...">
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
 </section>
 
 <section class="movies-grid">
-
+    <div th:if="${#lists.isEmpty(movies)}" class="no-results">
+        No movies found.
+    </div>
     <div class="movie-card" th:each="movie : ${movies}">
         <img th:src="${movie.posterUrl != null && !movie.posterUrl.isEmpty()
               ? movie.posterUrl

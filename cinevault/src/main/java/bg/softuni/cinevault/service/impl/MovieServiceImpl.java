@@ -87,4 +87,12 @@ public class MovieServiceImpl implements MovieService {
 
         movieRepository.save(movie);
     }
+
+    @Override
+    public List<Movie> searchMovies(String keyword) {
+        if (keyword == null && keyword.isBlank()) {
+            return movieRepository.findAll();
+        }
+        return movieRepository.findByTitleContainingIgnoreCase(keyword.trim());
+    }
 }

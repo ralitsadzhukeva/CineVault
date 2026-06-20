@@ -10,10 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.UUID;
@@ -39,9 +36,7 @@ public class MovieController {
     }
 
     @PostMapping("/movies/add")
-    public ModelAndView addMovie(
-            @Valid @ModelAttribute("movieAddDto") MovieAddDto movieAddDto,
-            BindingResult bindingResult) {
+    public ModelAndView addMovie(@Valid @ModelAttribute("movieAddDto") MovieAddDto movieAddDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
 
@@ -57,10 +52,12 @@ public class MovieController {
         return new ModelAndView("redirect:/movies");
     }
     @GetMapping("/movies")
-    public ModelAndView movies() {
+    public ModelAndView movies(@RequestParam(required = false,defaultValue = "") String search) {
+
         ModelAndView mav = new ModelAndView("movies");
 
-        mav.addObject("movies", movieService.findAll());
+        mav.addObject("movies", movieService.searchMovies(search));
+        mav.addObject("search", search);
 
         return mav;
     }
@@ -134,4 +131,5 @@ public class MovieController {
         movieService.updateMovie(id, movieEditDto);
         return new ModelAndView("redirect:/movies/manage");
     }
+
 }

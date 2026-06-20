@@ -15,5 +15,5 @@ public interface MovieService {
     void deleteMovie(UUID id);
     MovieEditDto getMovieForEdit(UUID id);
     void updateMovie(UUID id, MovieEditDto movieEditDto);
-
+    List<Movie> searchMovies(String keyword);
 }
