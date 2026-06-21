@@ -33,17 +33,28 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ModelAndView register(@Valid @ModelAttribute UserRegisterDto userRegisterDto,
-                           BindingResult bindingResult) {
+    public ModelAndView register(@Valid @ModelAttribute UserRegisterDto userRegisterDto, BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
-            ModelAndView modelAndView = new ModelAndView();
-            modelAndView.setViewName("register");
-            return modelAndView;
+            ModelAndView mav = new ModelAndView("register");
+            mav.addObject("userRegisterDto", userRegisterDto);
+            return mav;
         }
 
-        userService.register(userRegisterDto);
+        try {
+            userService.register(userRegisterDto);
 
-        return new ModelAndView("redirect:/login");
+            return new ModelAndView("redirect:/login");
+
+        } catch (IllegalArgumentException e) {
+
+            ModelAndView mav = new ModelAndView("register");
+
+            mav.addObject("userRegisterDto", userRegisterDto);
+            mav.addObject("errorMessage", e.getMessage());
+
+            return mav;
+        }
     }
     @GetMapping("/login")
     public ModelAndView getLoginPage() {

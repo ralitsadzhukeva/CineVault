@@ -51,7 +51,9 @@
                 <p class="alert-warning" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
 
             </div>
-
+            <div th:if="${errorMessage}" class="error-message">
+                <p th:text="${errorMessage}"></p>
+            </div>
             <button type="submit" class="btn">
                 Register
             </button>

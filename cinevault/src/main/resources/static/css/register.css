@@ -109,3 +109,8 @@ body {
 .login-link a:hover {
     text-decoration: underline;
 }
+.error-message {
+    color: #ef4444;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
