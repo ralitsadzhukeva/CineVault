@@ -26,7 +26,11 @@ public class MovieController {
     }
 
     @GetMapping("/movies/add")
-    public ModelAndView getAddMoviePage() {
+    public ModelAndView getAddMoviePage(HttpSession session) {
+
+        if (session.getAttribute("user_role") != Role.ADMIN) {
+            return new ModelAndView("redirect:/movies");
+        }
 
         ModelAndView mav = new ModelAndView("movie-add");
         mav.addObject("movieAddDto", new MovieAddDto());
@@ -36,8 +40,10 @@ public class MovieController {
     }
 
     @PostMapping("/movies/add")
-    public ModelAndView addMovie(@Valid @ModelAttribute("movieAddDto") MovieAddDto movieAddDto, BindingResult bindingResult) {
-
+    public ModelAndView addMovie(@Valid @ModelAttribute("movieAddDto") MovieAddDto movieAddDto, BindingResult bindingResult,HttpSession session) {
+        if (session.getAttribute("user_role") != Role.ADMIN) {
+            return new ModelAndView("redirect:/movies");
+        }
         if (bindingResult.hasErrors()) {
 
             ModelAndView mav = new ModelAndView("movie-add");
@@ -73,8 +79,10 @@ public class MovieController {
     }
 
     @GetMapping("/movies/manage")
-    public ModelAndView manageMovies() {
-
+    public ModelAndView manageMovies(HttpSession session) {
+        if (session.getAttribute("user_role") != Role.ADMIN) {
+            return new ModelAndView("redirect:/movies");
+        }
         ModelAndView mav = new ModelAndView("manage-movies");
 
         mav.addObject("movies", movieService.findAll());
@@ -97,10 +105,9 @@ public class MovieController {
         return "redirect:/movies/manage";
     }
     @GetMapping("/movies/edit/{id}")
-    public ModelAndView editMovie(@PathVariable UUID id,
-                                  HttpSession session) {
+    public ModelAndView editMovie(@PathVariable UUID id, HttpSession session) {
 
-        if (session.getAttribute("user_role") == null ||  !session.getAttribute("user_role").toString().equals("ADMIN")) {
+        if (!Role.ADMIN.equals(session.getAttribute("user_role"))) {
             return new ModelAndView("redirect:/movies");
         }
 
