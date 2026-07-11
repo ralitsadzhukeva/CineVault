@@ -11,10 +11,7 @@ public class HomeController {
     @GetMapping("/home")
     public ModelAndView home(HttpSession session) {
         ModelAndView mav = new ModelAndView("home");
-
-        if (session.getAttribute("user_id") == null) {
-            return new ModelAndView("redirect:/login");
-        }
+        
         mav.addObject("isAdmin",
                 session.getAttribute("user_role") == Role.ADMIN);
 

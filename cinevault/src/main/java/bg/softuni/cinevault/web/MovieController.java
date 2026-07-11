@@ -28,9 +28,6 @@ public class MovieController {
     @GetMapping("/movies/add")
     public ModelAndView getAddMoviePage(HttpSession session) {
 
-        if (session.getAttribute("user_role") != Role.ADMIN) {
-            return new ModelAndView("redirect:/movies");
-        }
 
         ModelAndView mav = new ModelAndView("movie-add");
         mav.addObject("movieAddDto", new MovieAddDto());
@@ -41,9 +38,6 @@ public class MovieController {
 
     @PostMapping("/movies/add")
     public ModelAndView addMovie(@Valid @ModelAttribute("movieAddDto") MovieAddDto movieAddDto, BindingResult bindingResult,HttpSession session) {
-        if (session.getAttribute("user_role") != Role.ADMIN) {
-            return new ModelAndView("redirect:/movies");
-        }
         if (bindingResult.hasErrors()) {
 
             ModelAndView mav = new ModelAndView("movie-add");
@@ -80,9 +74,6 @@ public class MovieController {
 
     @GetMapping("/movies/manage")
     public ModelAndView manageMovies(HttpSession session) {
-        if (session.getAttribute("user_role") != Role.ADMIN) {
-            return new ModelAndView("redirect:/movies");
-        }
         ModelAndView mav = new ModelAndView("manage-movies");
 
         mav.addObject("movies", movieService.findAll());
@@ -92,13 +83,6 @@ public class MovieController {
     @PostMapping("/movies/delete/{id}")
     public String deleteMovie(@PathVariable UUID id, HttpSession session) {
 
-        if (session.getAttribute("user_id") == null) {
-            return "redirect:/login";
-        }
-
-        if (session.getAttribute("user_role") != Role.ADMIN) {
-            return "redirect:/movies";
-        }
 
         movieService.deleteMovie(id);
 
@@ -106,10 +90,6 @@ public class MovieController {
     }
     @GetMapping("/movies/edit/{id}")
     public ModelAndView editMovie(@PathVariable UUID id, HttpSession session) {
-
-        if (!Role.ADMIN.equals(session.getAttribute("user_role"))) {
-            return new ModelAndView("redirect:/movies");
-        }
 
         ModelAndView mav = new ModelAndView("movie-edit");
 
@@ -120,11 +100,7 @@ public class MovieController {
         return mav;
     }
     @PostMapping("/movies/edit/{id}")
-    public ModelAndView editMovie(@PathVariable UUID id, @Valid MovieEditDto movieEditDto, BindingResult bindingResult, HttpSession session) {
-
-        if (session.getAttribute("user_role") == null || !session.getAttribute("user_role").toString().equals("ADMIN")) {
-            return new ModelAndView("redirect:/movies");
-        }
+    public ModelAndView editMovie(@PathVariable UUID id, @Valid MovieEditDto movieEditDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             ModelAndView mav = new ModelAndView("movie-edit");

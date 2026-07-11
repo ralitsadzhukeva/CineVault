@@ -70,8 +70,7 @@ public class AuthController {
     @PostMapping("/login")
     public ModelAndView login(@Valid @ModelAttribute UserLoginDto userLoginDto,
                               BindingResult bindingResult,
-                              HttpSession httpSession,
-                              HttpServletResponse response) {
+                              HttpSession httpSession) {
 
         if (bindingResult.hasErrors()) {
             ModelAndView modelAndView = new ModelAndView();

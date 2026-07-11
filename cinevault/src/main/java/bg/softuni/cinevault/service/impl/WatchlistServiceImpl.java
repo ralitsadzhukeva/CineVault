@@ -52,7 +52,10 @@ public class WatchlistServiceImpl implements WatchlistService {
 
     @Override
     public void removeMovie(UUID watchlistId) {
-        watchlistRepository.deleteById(watchlistId);
+        Watchlist entry = watchlistRepository.findById(watchlistId)
+                .orElseThrow(()-> new RuntimeException("Watchlist entry not found: " + watchlistId) );
+
+        watchlistRepository.delete(entry);
     }
 
     @Override

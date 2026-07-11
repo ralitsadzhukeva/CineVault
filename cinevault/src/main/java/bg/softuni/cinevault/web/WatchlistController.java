@@ -17,13 +17,9 @@ public class WatchlistController {
     public WatchlistController(WatchlistService watchlistService) {
         this.watchlistService = watchlistService;
     }
-    @GetMapping("/watchlist/remove/{movieId}")
-    public String removeMovie(@PathVariable UUID movieId, HttpSession session) {
-
-        if (session.getAttribute("user_id") == null) {
-            return "redirect:/login";
-        }
-        watchlistService.removeMovie(movieId);
+    @GetMapping("/watchlist/remove/{watchlistId}")
+    public String removeMovie(@PathVariable UUID watchlistId) {
+        watchlistService.removeMovie(watchlistId);
         return "redirect:/watchlist";
     }
     @GetMapping("/watchlist/watched/{id}")
@@ -40,9 +36,6 @@ public class WatchlistController {
 
     @GetMapping("/watchlist/add/{movieId}")
     public String addMovie(@PathVariable UUID movieId, HttpSession session) {
-        if (session.getAttribute("user_id") == null) {
-            return "redirect:/login";
-        }
 
         UUID userId = (UUID) session.getAttribute("user_id");
 
@@ -52,9 +45,7 @@ public class WatchlistController {
     }
     @GetMapping("/watchlist")
     public ModelAndView watchlist(HttpSession session) {
-        if (session.getAttribute("user_id") == null) {
-            return new ModelAndView("redirect:/login");
-        }
+
         UUID userId = (UUID) session.getAttribute("user_id");
 
         ModelAndView mav = new ModelAndView("watchlist");

@@ -1,12 +1,13 @@
 package bg.softuni.cinevault.web;
 
 import bg.softuni.cinevault.dto.user.UserEditDto;
-import bg.softuni.cinevault.entities.User;
 import bg.softuni.cinevault.service.ReviewService;
 import bg.softuni.cinevault.service.UserService;
 import bg.softuni.cinevault.service.WatchlistService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,9 +32,6 @@ public class ProfileController {
 
         UUID userId = (UUID) session.getAttribute("user_id");
 
-        if (userId == null) {
-            return new ModelAndView("redirect:/login");
-        }
 
         ModelAndView mav = new ModelAndView("profile");
 
@@ -51,9 +49,6 @@ public class ProfileController {
     public ModelAndView editProfile(HttpSession session) {
 
         UUID userId = (UUID) session.getAttribute("user_id");
-        if (userId == null) {
-            return new ModelAndView("redirect:/login");
-        }
         UserEditDto userEditDto =
                 userService.getUserForEdit(userId);
 
@@ -66,9 +61,15 @@ public class ProfileController {
     }
     @PostMapping("/profile/edit")
     public ModelAndView editProfile(
-            @ModelAttribute UserEditDto userEditDto,
+            @Valid @ModelAttribute UserEditDto userEditDto,
+            BindingResult bindingResult,
             HttpSession session) {
 
+        if (bindingResult.hasErrors()) {
+            ModelAndView mav = new ModelAndView("profile-edit");
+            mav.addObject("userEditDto", userEditDto);
+            return mav;
+        }
         UUID userId =
                 (UUID) session.getAttribute("user_id");
 

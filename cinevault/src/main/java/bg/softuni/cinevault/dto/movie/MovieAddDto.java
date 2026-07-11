@@ -1,7 +1,6 @@
 package bg.softuni.cinevault.dto.movie;
 
 import bg.softuni.cinevault.enums.Genre;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
