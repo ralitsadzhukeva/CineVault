@@ -1,8 +1,10 @@
 package bg.softuni.cinevault.service.impl;
 
+import bg.softuni.cinevault.ExceptionHandling.ReviewNotFoundException;
 import bg.softuni.cinevault.entities.Movie;
 import bg.softuni.cinevault.entities.Review;
 import bg.softuni.cinevault.entities.User;
+import bg.softuni.cinevault.enums.Role;
 import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.repository.UserRepository;
@@ -10,6 +12,7 @@ import bg.softuni.cinevault.service.ReviewService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.access.AccessDeniedException;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,13 +74,28 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void deleteReview(UUID id) {
+    public void deleteReview(UUID id, User currentUser) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found"));
+
+
+        if (!review.getUser().getId().equals(currentUser.getId())
+                && currentUser.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("You are not allowed to delete this review");
+        }
         reviewRepository.deleteById(id);
     }
 
     @Override
-    public void editReview(UUID id, Integer rating, String comment) {
-        Review review = reviewRepository.findById(id).orElseThrow();
+    public void editReview(UUID id, User currentUser, Integer rating, String comment){
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(()-> new ReviewNotFoundException("Review not found"));
+
+        if (!review.getUser().getId().equals(currentUser.getId())
+        && currentUser.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("You are not allowed to edit this review");
+        }
+
         review.setRating(rating);
         review.setComment(comment);
         reviewRepository.save(review);

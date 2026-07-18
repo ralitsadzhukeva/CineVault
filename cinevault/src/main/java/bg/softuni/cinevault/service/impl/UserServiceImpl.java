@@ -43,29 +43,6 @@ public class UserServiceImpl implements UserService {
 
         return userRegisterDto;
     }
-
-    @Override
-    public UserLoginDto login(UserLoginDto userLoginDto) {
-        User user = userRepository.findByUsername(userLoginDto.getUsername())
-                .orElse(null);
-
-        if (user == null) {
-            return null;
-        }
-
-        if (!passwordEncoder.matches(
-                userLoginDto.getPassword(),
-                user.getPassword())) {
-
-            return null;
-        }
-
-        return UserLoginDto.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .role(user.getRole())
-                .build();
-    }
     @Override
     public UserEditDto getUserForEdit(UUID userId) {
 

@@ -3,10 +3,8 @@ package bg.softuni.cinevault.web;
 import bg.softuni.cinevault.dto.movie.MovieAddDto;
 import bg.softuni.cinevault.dto.movie.MovieEditDto;
 import bg.softuni.cinevault.enums.Genre;
-import bg.softuni.cinevault.enums.Role;
 import bg.softuni.cinevault.service.MovieService;
 import bg.softuni.cinevault.service.ReviewService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -26,7 +24,7 @@ public class MovieController {
     }
 
     @GetMapping("/movies/add")
-    public ModelAndView getAddMoviePage(HttpSession session) {
+    public ModelAndView getAddMoviePage() {
 
 
         ModelAndView mav = new ModelAndView("movie-add");
@@ -37,7 +35,8 @@ public class MovieController {
     }
 
     @PostMapping("/movies/add")
-    public ModelAndView addMovie(@Valid @ModelAttribute("movieAddDto") MovieAddDto movieAddDto, BindingResult bindingResult,HttpSession session) {
+    public ModelAndView addMovie(@Valid @ModelAttribute("movieAddDto") MovieAddDto movieAddDto,
+                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
 
             ModelAndView mav = new ModelAndView("movie-add");
@@ -73,7 +72,7 @@ public class MovieController {
     }
 
     @GetMapping("/movies/manage")
-    public ModelAndView manageMovies(HttpSession session) {
+    public ModelAndView manageMovies() {
         ModelAndView mav = new ModelAndView("manage-movies");
 
         mav.addObject("movies", movieService.findAll());
@@ -81,7 +80,7 @@ public class MovieController {
         return mav;
     }
     @PostMapping("/movies/delete/{id}")
-    public String deleteMovie(@PathVariable UUID id, HttpSession session) {
+    public String deleteMovie(@PathVariable UUID id) {
 
 
         movieService.deleteMovie(id);
@@ -89,7 +88,7 @@ public class MovieController {
         return "redirect:/movies/manage";
     }
     @GetMapping("/movies/edit/{id}")
-    public ModelAndView editMovie(@PathVariable UUID id, HttpSession session) {
+    public ModelAndView editMovie(@PathVariable UUID id) {
 
         ModelAndView mav = new ModelAndView("movie-edit");
 
@@ -100,7 +99,9 @@ public class MovieController {
         return mav;
     }
     @PostMapping("/movies/edit/{id}")
-    public ModelAndView editMovie(@PathVariable UUID id, @Valid MovieEditDto movieEditDto, BindingResult bindingResult) {
+    public ModelAndView editMovie(@PathVariable UUID id,
+                                  @Valid MovieEditDto movieEditDto,
+                                  BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             ModelAndView mav = new ModelAndView("movie-edit");

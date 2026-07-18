@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="https://www.thymeleaf.org/extras/spring-security"><head>
     <meta charset="UTF-8">
     <title>Movies - CineVault</title>
     <link rel="stylesheet" th:href="@{/css/movies.css}">
@@ -12,8 +13,9 @@
     <ul class="nav-links">
         <li><a th:href="@{/home}">Home</a></li>
         <li><a th:href="@{/movies}">Movies</a></li>
-        <li th:if="${session.user_id != null}"><a th:href="@{/watchlist}">My Watchlist</a></li>
-        <li><a th:href="@{/reviews}">My Reviews</a></li>
+        <li sec:authorize="isAuthenticated()">
+            <a th:href="@{/watchlist}">My Watchlist</a>
+        </li>        <li><a th:href="@{/reviews}">My Reviews</a></li>
         <li><a th:href="@{/profile}">My Profile</a></li>
     </ul>
 </nav>
@@ -58,31 +60,20 @@
             </p>
 
             <div class="actions">
-                <a th:if="${session.user_id != null}"
-                   th:href="@{/watchlist/add/{id}(id=${movie.id})}"
-                   class="btn small">
-                    Add to Watchlist
-                </a>
+                <div sec:authorize="isAuthenticated()">
+                    <a th:href="@{/watchlist/add/{id}(id=${movie.id})}" class="btn">
+                        Add to Watchlist
+                    </a>
+                </div>
 
-                <a th:if="${session.user_id == null}"
-                   th:href="@{/login}"
-                   class="btn small">
-                    Login to add to watchlist
-                </a>
+                <div sec:authorize="isAnonymous()">
+                    <a th:href="@{/login}" class="btn">
+                        Login to add to Watchlist
+                    </a>
+                </div>
                 <a th:href="@{/movies/{id}(id=${movie.id})}" class="btn small">
                     Details
                 </a>
-                <!--                <a th:if="${session.user_id != null}"-->
-<!--                   th:href="@{/watchlist/add/{id}(id=${movie.id})}"-->
-<!--                   class="btn small">-->
-<!--                    Rate-->
-<!--                </a>-->
-
-<!--                <a th:if="${session.user_id == null}"-->
-<!--                   th:href="@{/login}"-->
-<!--                   class="btn small">-->
-<!--                    Login to rate-->
-<!--                </a>-->
             </div>
 
         </div>

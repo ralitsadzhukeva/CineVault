@@ -11,6 +11,7 @@ body {
     min-height: 100vh;
 }
 
+/* NAVBAR */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -26,21 +27,59 @@ body {
     font-weight: bold;
 }
 
+/* NAV LINKS */
 .nav-links {
     display: flex;
+    align-items: center;
+
     list-style: none;
     gap: 25px;
+}
+
+.nav-links li {
+    display: flex;
+    align-items: center;
 }
 
 .nav-links a {
     color: white;
     text-decoration: none;
+
+    font-size: 16px;
+    font-family: "Segoe UI", sans-serif;
 }
 
 .nav-links a:hover {
     color: #f59e0b;
 }
 
+
+/* LOGOUT BUTTON */
+.nav-links form {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.logout-btn {
+    all: unset;
+
+    color: white;
+    cursor: pointer;
+
+    font-size: 16px;
+    font-family: "Segoe UI", sans-serif;
+
+    display: flex;
+    align-items: center;
+}
+
+.logout-btn:hover {
+    color: #f59e0b;
+}
+
+
+/* WELCOME SECTION */
 .welcome {
     text-align: center;
     padding: 80px 20px;
@@ -56,6 +95,8 @@ body {
     color: #cbd5e1;
 }
 
+
+/* DASHBOARD */
 .dashboard {
     display: flex;
     justify-content: center;
@@ -65,6 +106,8 @@ body {
     padding: 50px;
 }
 
+
+/* CARDS */
 .card {
     background: #1e293b;
 
@@ -86,6 +129,8 @@ body {
     color: #cbd5e1;
 }
 
+
+/* BUTTONS */
 .btn {
     display: inline-block;
 
@@ -97,8 +142,20 @@ body {
     text-decoration: none;
 
     border-radius: 8px;
+
+    transition: 0.2s;
 }
 
 .btn:hover {
     background: #d97706;
+}
+
+
+/* ADMIN PANEL */
+.admin-panel {
+    border: 1px solid #f59e0b;
+}
+
+.manage-btn {
+    margin-left: 10px;
 }

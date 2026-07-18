@@ -49,10 +49,9 @@
                 Edit
             </a>
 
-            <a th:href="@{/reviews/delete/{id}(id=${review.id})}"
-               class="btn danger">
-                Delete
-            </a>
+            <form th:action="@{/reviews/delete/{id}(id=${review.id})}" method="post">
+                <button type="submit">Delete</button>
+            </form>
 
         </div>
 

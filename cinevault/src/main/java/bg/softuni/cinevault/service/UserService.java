@@ -10,7 +10,6 @@ import java.util.UUID;
 
 public interface UserService {
     UserRegisterDto register(UserRegisterDto userRegisterDto);
-    UserLoginDto login(UserLoginDto userLoginDto);
     List<User> findAll();
     User findById(UUID userId);
     UserEditDto getUserForEdit(UUID userId);

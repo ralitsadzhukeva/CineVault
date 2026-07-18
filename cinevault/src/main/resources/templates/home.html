@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="https://www.thymeleaf.org/extras/spring-security"><head>
     <meta charset="UTF-8">
     <title>CineVault Home</title>
     <link rel="stylesheet" th:href="@{/css/home.css}">
@@ -16,7 +17,11 @@
         <li><a th:href="@{/watchlist}">My Watchlist</a></li>
         <li><a th:href="@{/reviews}">My Reviews</a></li>
         <li><a th:href="@{/profile}">My Profile</a></li>
-        <li><a th:href="@{/logout}">Logout</a></li>
+        <li>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </li>
     </ul>
 </nav>
 
@@ -48,7 +53,7 @@
         <p>Manage your saved movies.</p>
         <a th:href="@{/watchlist}" class="btn">Open Watchlist</a>
     </div>
-    <div th:if="${isAdmin}" class="card admin-panel">
+    <div sec:authorize="hasRole('ADMIN')" class="card admin-panel">
         <h2>🛠 Admin Panel</h2>
 
         <a th:href="@{/movies/add}" class="btn">

@@ -1,11 +1,12 @@
 package bg.softuni.cinevault.web;
 
 import bg.softuni.cinevault.dto.user.UserEditDto;
+import bg.softuni.cinevault.entities.User;
 import bg.softuni.cinevault.service.ReviewService;
 import bg.softuni.cinevault.service.UserService;
 import bg.softuni.cinevault.service.WatchlistService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.UUID;
 
 @Controller
 public class ProfileController {
@@ -28,29 +28,26 @@ public class ProfileController {
     }
 
     @GetMapping("/profile")
-    public ModelAndView profile(HttpSession session) {
-
-        UUID userId = (UUID) session.getAttribute("user_id");
+    public ModelAndView profile(@AuthenticationPrincipal User user) {
 
 
         ModelAndView mav = new ModelAndView("profile");
 
-        mav.addObject("user", userService.findById(userId));
+        mav.addObject("user", userService.findById(user.getId()));
 
         mav.addObject("watchlistCount",
-                watchlistService.getUserWatchlist(userId).size());
+                watchlistService.getUserWatchlist(user.getId()).size());
 
         mav.addObject("reviewCount",
-                reviewService.getUserReviews(userId).size());
+                reviewService.getUserReviews(user.getId()).size());
 
         return mav;
     }
     @GetMapping("/profile/edit")
-    public ModelAndView editProfile(HttpSession session) {
+    public ModelAndView editProfile(@AuthenticationPrincipal User user) {
 
-        UUID userId = (UUID) session.getAttribute("user_id");
         UserEditDto userEditDto =
-                userService.getUserForEdit(userId);
+                userService.getUserForEdit(user.getId());
 
         ModelAndView mav =
                 new ModelAndView("profile-edit");
@@ -63,17 +60,15 @@ public class ProfileController {
     public ModelAndView editProfile(
             @Valid @ModelAttribute UserEditDto userEditDto,
             BindingResult bindingResult,
-            HttpSession session) {
+            @AuthenticationPrincipal User user) {
 
         if (bindingResult.hasErrors()) {
             ModelAndView mav = new ModelAndView("profile-edit");
             mav.addObject("userEditDto", userEditDto);
             return mav;
         }
-        UUID userId =
-                (UUID) session.getAttribute("user_id");
 
-        userService.update(userId, userEditDto);
+        userService.update(user.getId(), userEditDto);
 
         return new ModelAndView("redirect:/profile");
     }

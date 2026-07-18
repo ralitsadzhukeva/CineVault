@@ -2,6 +2,7 @@ package bg.softuni.cinevault.service;
 
 
 import bg.softuni.cinevault.entities.Review;
+import bg.softuni.cinevault.entities.User;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +13,9 @@ public interface ReviewService {
     List<Review> getUserReviews(UUID id);
     void deleteReviewsByMovieId(UUID movieId);
     double getAverageRating(UUID movieId);
-    void deleteReview(UUID id);
-    void editReview(UUID id, Integer rating, String comment);
+    void deleteReview(UUID id, User currentUser);
+
+    void editReview(UUID id, User currentUser, Integer rating, String comment);
+
     Review findById(UUID id);
 }
