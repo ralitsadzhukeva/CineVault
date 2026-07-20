@@ -3,6 +3,7 @@ package bg.softuni.cinevault.service.impl;
 import bg.softuni.cinevault.dto.movie.MovieAddDto;
 import bg.softuni.cinevault.dto.movie.MovieEditDto;
 import bg.softuni.cinevault.entities.Movie;
+import bg.softuni.cinevault.exception.movie.MovieNotFoundException;
 import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.service.MovieService;
 import bg.softuni.cinevault.service.ReviewService;
@@ -48,7 +49,7 @@ public class MovieServiceImpl implements MovieService {
     public Movie findById(UUID id) {
         return movieRepository
                 .findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("Movie not found"));
+                .orElseThrow(MovieNotFoundException::new);
     }
 
     @Override

@@ -3,6 +3,7 @@ package bg.softuni.cinevault.service.impl;
 import bg.softuni.cinevault.entities.Movie;
 import bg.softuni.cinevault.entities.User;
 import bg.softuni.cinevault.entities.Watchlist;
+import bg.softuni.cinevault.exception.watchlist.WatchlistEntryNotFoundException;
 import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.repository.UserRepository;
 import bg.softuni.cinevault.repository.WatchlistRepository;
@@ -53,7 +54,7 @@ public class WatchlistServiceImpl implements WatchlistService {
     @Override
     public void removeMovie(UUID watchlistId) {
         Watchlist entry = watchlistRepository.findById(watchlistId)
-                .orElseThrow(()-> new RuntimeException("Watchlist entry not found: " + watchlistId) );
+                .orElseThrow(()-> new WatchlistEntryNotFoundException(watchlistId.toString()));
 
         watchlistRepository.delete(entry);
     }

@@ -1,10 +1,11 @@
 package bg.softuni.cinevault.service.impl;
 
 import bg.softuni.cinevault.dto.user.UserEditDto;
-import bg.softuni.cinevault.dto.user.UserLoginDto;
 import bg.softuni.cinevault.dto.user.UserRegisterDto;
 import bg.softuni.cinevault.entities.User;
 import bg.softuni.cinevault.enums.Role;
+import bg.softuni.cinevault.exception.user.DuplicateUsernameException;
+import bg.softuni.cinevault.exception.user.UserNotFoundException;
 import bg.softuni.cinevault.repository.UserRepository;
 import bg.softuni.cinevault.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserRegisterDto register(UserRegisterDto userRegisterDto) {
         if (userRepository.findByUsername(userRegisterDto.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("Username already exists");
+            throw new DuplicateUsernameException();
         }
         User user = User.builder()
                 .username(userRegisterDto.getUsername())
@@ -74,7 +75,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(UUID id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
     }
 
 }

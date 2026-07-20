@@ -1,6 +1,7 @@
 package bg.softuni.cinevault.service.impl;
 
-import bg.softuni.cinevault.ExceptionHandling.ReviewNotFoundException;
+import bg.softuni.cinevault.exception.review.DuplicateReviewException;
+import bg.softuni.cinevault.exception.review.ReviewNotFoundException;
 import bg.softuni.cinevault.entities.Movie;
 import bg.softuni.cinevault.entities.Review;
 import bg.softuni.cinevault.entities.User;
@@ -33,7 +34,7 @@ public class ReviewServiceImpl implements ReviewService {
         Movie movie = movieRepository.findById(movieId).orElseThrow();
 
         if (reviewRepository.existsByMovieAndUser(movie, user)){
-            return;
+            throw new DuplicateReviewException();
         }
         Review review = Review.builder()
                 .user(user)
@@ -76,7 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void deleteReview(UUID id, User currentUser) {
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new ReviewNotFoundException("Review not found"));
+                .orElseThrow(ReviewNotFoundException::new);
 
 
         if (!review.getUser().getId().equals(currentUser.getId())
@@ -89,7 +90,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void editReview(UUID id, User currentUser, Integer rating, String comment){
         Review review = reviewRepository.findById(id)
-                .orElseThrow(()-> new ReviewNotFoundException("Review not found"));
+                .orElseThrow(ReviewNotFoundException::new);
 
         if (!review.getUser().getId().equals(currentUser.getId())
         && currentUser.getRole() != Role.ADMIN) {

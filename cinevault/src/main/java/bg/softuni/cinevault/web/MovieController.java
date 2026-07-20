@@ -6,6 +6,7 @@ import bg.softuni.cinevault.enums.Genre;
 import bg.softuni.cinevault.service.MovieService;
 import bg.softuni.cinevault.service.ReviewService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class MovieController {
         this.reviewService = reviewService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/movies/add")
     public ModelAndView getAddMoviePage() {
 
@@ -34,6 +36,7 @@ public class MovieController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/movies/add")
     public ModelAndView addMovie(@Valid @ModelAttribute("movieAddDto") MovieAddDto movieAddDto,
                                  BindingResult bindingResult) {
@@ -71,6 +74,7 @@ public class MovieController {
         return mav;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/movies/manage")
     public ModelAndView manageMovies() {
         ModelAndView mav = new ModelAndView("manage-movies");
@@ -79,6 +83,8 @@ public class MovieController {
 
         return mav;
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/movies/delete/{id}")
     public String deleteMovie(@PathVariable UUID id) {
 
@@ -87,6 +93,8 @@ public class MovieController {
 
         return "redirect:/movies/manage";
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/movies/edit/{id}")
     public ModelAndView editMovie(@PathVariable UUID id) {
 
@@ -98,6 +106,7 @@ public class MovieController {
 
         return mav;
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/movies/edit/{id}")
     public ModelAndView editMovie(@PathVariable UUID id,
                                   @Valid MovieEditDto movieEditDto,
