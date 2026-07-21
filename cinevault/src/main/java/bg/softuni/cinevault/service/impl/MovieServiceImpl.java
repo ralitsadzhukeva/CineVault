@@ -49,7 +49,7 @@ public class MovieServiceImpl implements MovieService {
     public Movie findById(UUID id) {
         return movieRepository
                 .findById(id)
-                .orElseThrow(MovieNotFoundException::new);
+                .orElseThrow(()->new MovieNotFoundException(id));
     }
 
     @Override

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title th:text="${errorTitle}">Error</title>
@@ -28,14 +28,21 @@
 
         <div class="buttons">
 
-            <a th:href="@{/home}" class="btn">
+            <a sec:authorize="isAuthenticated()"
+               th:href="@{/home}"
+               class="btn">
                 Home
             </a>
 
+            <a sec:authorize="isAnonymous()"
+               th:href="@{/}"
+               class="btn">
+                Home
+            </a>
+            
             <a th:href="@{/movies}" class="btn secondary">
                 Browse Movies
             </a>
-
         </div>
 
     </div>

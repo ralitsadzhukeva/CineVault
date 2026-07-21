@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class GlobalExceptionHandler {
     @ExceptionHandler(ApplicationException.class)
     public ModelAndView handleApplicationException(ApplicationException ex) {
-        log.info("ApplicationException occurred: {}", ex.getMessage(),ex);
+        log.warn("ApplicationException occurred: {}", ex.getMessage(),ex);
 
         ModelAndView mav = new ModelAndView("error");
 
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ModelAndView handleGenericException(Exception ex) {
-        log.info("Unexpected exception occurred",ex);
+        log.error("Unexpected exception occurred",ex);
 
         ModelAndView mav = new ModelAndView("error");
 
