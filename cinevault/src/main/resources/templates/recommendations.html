@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Recommendations | CineVault</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/recommendations.css}">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        <a th:href="@{/}">CineVault</a>
+    </div>
+
+    <nav>
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/movies}">Movies</a>
+        <a th:href="@{/watchlist}">Watchlist</a>
+        <a class="active" th:href="@{/recommendations}">
+            Recommendations
+        </a>
+        <a th:href="@{/profile}">Profile</a>
+        <a th:href="@{/logout}">Logout</a>
+    </nav>
+
+</header>
+
+
+<main class="recommendations-container">
+
+    <section class="recommendations-header">
+
+        <h1>Recommended for you 🎬</h1>
+
+        <p>
+            Movies selected based on your interests,
+            ratings and watchlist.
+        </p>
+
+    </section>
+
+
+    <section class="movie-grid">
+
+
+        <!-- Example movie card -->
+        <!-- Replace with thymeleaf loop later -->
+
+        <div class="movie-card"
+             th:each="recommendation : ${recommendations}">
+
+
+            <img th:src="${recommendation.posterUrl}"
+                 alt="Movie poster">
+
+
+            <div class="movie-info">
+
+                <h2 th:text="${recommendation.title}">
+                    Movie title
+                </h2>
+
+
+                <p class="genre"
+                   th:text="${recommendation.genre}">
+                    Genre
+                </p>
+
+
+                <p class="reason">
+
+                    <strong>Why recommended:</strong>
+
+                    <span th:text="${recommendation.reason}">
+                        Because you liked similar movies
+                    </span>
+
+                </p>
+
+
+                <a class="details-button"
+                   th:href="@{/movies/{id}(id=${recommendation.movieId})}">
+                    View Movie
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+</html>
