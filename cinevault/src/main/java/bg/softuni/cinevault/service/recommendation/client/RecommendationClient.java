@@ -12,7 +12,7 @@ import java.util.UUID;
         name = "recommendation-service",
         url = "http://localhost:8081")
 public interface RecommendationClient {
-    @GetMapping("/api/recommendations/{userId}")
+    @GetMapping("/api/recommendations/user/{userId}")
     List<RecommendationDto> getRecommendations(
             @PathVariable UUID userId);
 
@@ -24,7 +24,7 @@ public interface RecommendationClient {
     void regenerateRecommendations(
             @RequestBody RecommendationRequestDto request);
 
-    @DeleteMapping("/api/recommendations/{userId}")
+    @DeleteMapping("/api/recommendations/user/{userId}")
     void deleteRecommendations(
             @PathVariable UUID userId);
 }

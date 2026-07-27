@@ -1,8 +1,7 @@
 package bg.softuni.cinevault.service.recommendation;
 
-import bg.softuni.cinevault.dto.recommendation.MovieDto;
-import bg.softuni.cinevault.dto.recommendation.MoviePreferenceDto;
-import bg.softuni.cinevault.dto.recommendation.RecommendationRequestDto;
+import bg.softuni.cinevault.dto.recommendation.*;
+import bg.softuni.cinevault.entities.Movie;
 import bg.softuni.cinevault.service.MovieService;
 import bg.softuni.cinevault.service.ReviewService;
 import bg.softuni.cinevault.service.recommendation.client.RecommendationClient;
@@ -51,5 +50,40 @@ public class RecommendationServiceImpl implements RecommendationService{
                 .build();
 
         recommendationClient.generateRecommendations(request);
+    }
+
+    @Override
+    public List<RecommendationViewDto> getRecommendations(UUID userId) {
+        List<RecommendationDto> recommendations =
+                recommendationClient.getRecommendations(userId);
+
+        if (recommendations == null || recommendations.isEmpty()) {
+            return List.of();
+        }
+
+        return recommendations.stream()
+                .map(recommendationDto -> {
+
+                    Movie movie = movieService.findById(
+                            recommendationDto.getMovieId()
+                    );
+
+                    return RecommendationViewDto.builder()
+                            .movieId(movie.getId())
+                            .title(movie.getTitle())
+                            .posterUrl(movie.getPosterUrl())
+                            .genre(movie.getGenre())
+                            .averageRating(reviewService.getAverageRating(movie.getId()))
+                            .reason(recommendationDto.getReason())
+                            .score(recommendationDto.getScore())
+                            .build();
+
+                })
+                .toList();
+    }
+
+    @Override
+    public void deleteRecommendations(UUID userId) {
+        recommendationClient.deleteRecommendations(userId);
     }
 }

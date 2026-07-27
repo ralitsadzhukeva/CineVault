@@ -53,6 +53,13 @@
         <p>Manage your saved movies.</p>
         <a th:href="@{/watchlist}" class="btn">Open Watchlist</a>
     </div>
+    <div class="card">
+        <h2>🎬 Recommendations</h2>
+        <p>Discover movies picked for your taste.</p>
+        <a th:href="@{/recommendations}" class="btn">
+            View Recommendations
+        </a>
+    </div>
     <div sec:authorize="hasRole('ADMIN')" class="card admin-panel">
         <h2>🛠 Admin Panel</h2>
 
