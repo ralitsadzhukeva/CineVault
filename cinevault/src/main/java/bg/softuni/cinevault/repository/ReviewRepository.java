@@ -3,7 +3,9 @@ package bg.softuni.cinevault.repository;
 import bg.softuni.cinevault.entities.Movie;
 import bg.softuni.cinevault.entities.Review;
 import bg.softuni.cinevault.entities.User;
+import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,4 +17,6 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     boolean existsByMovieAndUser(Movie movie, User user);
     List<Review> findByUserId(UUID userId);
     void deleteByMovieId(UUID movieId);
+    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.movie.id = :movieId")
+    Double getAverageRating(@Param("movieId") UUID movieId);
 }

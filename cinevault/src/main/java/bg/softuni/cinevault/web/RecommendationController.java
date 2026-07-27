@@ -1,6 +1,7 @@
 package bg.softuni.cinevault.web;
 
 import bg.softuni.cinevault.dto.recommendation.RecommendationDto;
+import bg.softuni.cinevault.dto.recommendation.RecommendationViewDto;
 import bg.softuni.cinevault.entities.User;
 import bg.softuni.cinevault.service.recommendation.RecommendationService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,15 +20,16 @@ public class RecommendationController {
     public RecommendationController(RecommendationService recommendationService) {
         this.recommendationService = recommendationService;
     }
-
     @GetMapping("/recommendations")
     public ModelAndView recommendations(@AuthenticationPrincipal User user) {
 
-        ModelAndView mav = new ModelAndView("recommendations");
+        recommendationService.generateRecommendations(user.getId());
 
-        mav.addObject(
-                "recommendations",
-                recommendationService.getRecommendations(user.getId()));
+        List<RecommendationViewDto> recommendations =
+                recommendationService.getRecommendations(user.getId());
+
+        ModelAndView mav = new ModelAndView("recommendations");
+        mav.addObject("recommendations", recommendations);
 
         return mav;
     }

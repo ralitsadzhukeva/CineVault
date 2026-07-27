@@ -16,12 +16,19 @@
     </div>
 
     <nav>
-        <a th:href="@{/home}">Home</a>
-        <a th:href="@{/movies}">Movies</a>
-        <a th:href="@{/watchlist}">Watchlist</a>
-        <a class="active" th:href="@{/recommendations}">Recommendations</a>
-        <a th:href="@{/profile}">Profile</a>
-        <a th:href="@{/logout}">Logout</a>
+        <ul class="nav-links">
+        <li><a th:href="@{/home}">Home</a></li>
+        <li><a th:href="@{/movies}">Movies</a></li>
+        <li><a th:href="@{/watchlist}">Watchlist</a></li>
+        <li><a th:href="@{/reviews}">My Reviews</a></li>
+        <li><a class="active" th:href="@{/recommendations}">Recommendations</a></li>
+        <li><a th:href="@{/profile}">Profile</a></li>
+        <li>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </li>
+        </ul>
     </nav>
 </header>
 

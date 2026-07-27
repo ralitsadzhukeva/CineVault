@@ -5,56 +5,58 @@
 }
 
 body {
+    font-family: "Segoe UI", sans-serif;
     background-color: #0f172a;
     color: white;
-    font-family: Arial, sans-serif;
     min-height: 100vh;
 }
 
+
+/* Navbar */
+
 .navbar {
-    background-color: #1e293b;
+    background: #111827;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     padding: 20px 50px;
+}
 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+.logo {
+    font-size: 28px;
+    font-weight: bold;
 }
 
 .logo a {
     color: white;
     text-decoration: none;
-    font-size: 30px;
-    font-weight: bold;
 }
 
-nav {
+
+.nav-links {
     display: flex;
+    list-style: none;
     gap: 25px;
 }
 
-nav a {
-    color: #cbd5e1;
+
+.nav-links a {
+    color: white;
     text-decoration: none;
-    font-size: 17px;
-    transition: color 0.3s;
+    transition: 0.2s;
 }
 
-nav a:hover {
-    color: white;
+
+.nav-links a:hover {
+    color: #f59e0b;
 }
 
-nav a.active {
-    color: #38bdf8;
+
+.nav-links a.active {
+    color: #f59e0b;
     font-weight: bold;
-}
-
-body {
-    background-color: #0f172a;
-    color: white;
-    font-family: Arial, sans-serif;
 }
 
 
@@ -62,7 +64,7 @@ body {
 
 .recommendations-container {
 
-    padding: 50px;
+    padding: 60px 50px;
 
 }
 
@@ -98,6 +100,7 @@ body {
 .movie-grid {
 
     display: grid;
+
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 
     gap: 30px;
@@ -105,23 +108,21 @@ body {
 }
 
 
-
-/* Card */
+/* Movie card */
 
 .movie-card {
 
-    background-color: #1e293b;
+    background: #1e293b;
 
-    border-radius: 15px;
+    border-radius: 20px;
 
     overflow: hidden;
 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
 
 }
-
 
 
 .movie-card:hover {
@@ -129,7 +130,6 @@ body {
     transform: translateY(-8px);
 
 }
-
 
 
 /* Poster */
@@ -145,30 +145,27 @@ body {
 }
 
 
-
-/* Information */
+/* Movie information */
 
 .movie-info {
 
-    padding: 25px;
+    padding: 30px;
 
 }
-
 
 
 .movie-info h2 {
 
-    margin-bottom: 10px;
+    font-size: 26px;
 
-    font-size: 24px;
+    margin-bottom: 12px;
 
 }
 
 
-
 .genre {
 
-    color: #38bdf8;
+    color: #f59e0b;
 
     font-weight: bold;
 
@@ -177,17 +174,15 @@ body {
 }
 
 
-
 .reason {
 
     color: #cbd5e1;
 
-    line-height: 1.5;
+    line-height: 1.6;
 
     margin-bottom: 25px;
 
 }
-
 
 
 .reason strong {
@@ -197,31 +192,83 @@ body {
 }
 
 
-
 /* Button */
 
 .details-button {
 
     display: inline-block;
 
-    background-color: #2563eb;
-
-    color: white;
-
     padding: 12px 25px;
 
-    border-radius: 8px;
+    background: #f59e0b;
+
+    color: #0f172a;
 
     text-decoration: none;
 
-    transition: background-color 0.3s;
+    font-weight: bold;
+
+    border-radius: 10px;
+
+    transition: all 0.2s ease-in-out;
+
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 
 }
 
 
-
 .details-button:hover {
 
-    background-color: #1d4ed8;
+    background: #d97706;
+
+    transform: translateY(-2px);
+
+}
+
+
+.details-button:active {
+
+    transform: translateY(0);
+
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+
+}
+
+
+/* Logout button */
+
+.nav-links form {
+
+    display: flex;
+
+    align-items: center;
+
+    margin: 0;
+
+}
+
+
+.logout-btn {
+
+    all: unset;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    font-family: "Segoe UI", sans-serif;
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+.logout-btn:hover {
+
+    color: #f59e0b;
 
 }

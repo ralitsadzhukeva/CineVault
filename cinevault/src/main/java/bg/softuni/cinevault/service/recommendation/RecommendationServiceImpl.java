@@ -2,6 +2,8 @@ package bg.softuni.cinevault.service.recommendation;
 
 import bg.softuni.cinevault.dto.recommendation.*;
 import bg.softuni.cinevault.entities.Movie;
+import bg.softuni.cinevault.repository.MovieRepository;
+import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.service.MovieService;
 import bg.softuni.cinevault.service.ReviewService;
 import bg.softuni.cinevault.service.recommendation.client.RecommendationClient;
@@ -13,19 +15,20 @@ import java.util.UUID;
 @Service
 public class RecommendationServiceImpl implements RecommendationService{
     private final RecommendationClient recommendationClient;
-    private final MovieService movieService;
-    private final ReviewService reviewService;
+    private final MovieRepository movieRepository;
+    private final ReviewRepository reviewRepository;
 
     public RecommendationServiceImpl(RecommendationClient recommendationClient,
-                                     MovieService movieService, ReviewService reviewService) {
+                                     MovieRepository movieRepository, ReviewRepository reviewRepository) {
         this.recommendationClient = recommendationClient;
-        this.movieService = movieService;
-        this.reviewService = reviewService;
+        this.movieRepository = movieRepository;
+        this.reviewRepository = reviewRepository;
+
     }
 
     @Override
     public void generateRecommendations(UUID userId) {
-        List<MoviePreferenceDto> watchedMovies = reviewService.getUserReviews(userId)
+        List<MoviePreferenceDto> watchedMovies = reviewRepository.findByUserId(userId)
                 .stream()
                 .map(review -> MoviePreferenceDto.builder()
                         .movieId(review.getMovie().getId())
@@ -34,12 +37,12 @@ public class RecommendationServiceImpl implements RecommendationService{
                         .build())
                 .toList();
 
-        List<MovieDto> allMovies = movieService.findAll()
+        List<MovieDto> allMovies = movieRepository.findAll()
                 .stream()
                 .map(movie -> MovieDto.builder()
                         .movieId(movie.getId())
                         .genre(movie.getGenre())
-                        .averageRating(reviewService.getAverageRating(movie.getId()))
+                        .averageRating(reviewRepository.getAverageRating(movie.getId()))
                         .build())
                 .toList();
 
@@ -64,16 +67,15 @@ public class RecommendationServiceImpl implements RecommendationService{
         return recommendations.stream()
                 .map(recommendationDto -> {
 
-                    Movie movie = movieService.findById(
-                            recommendationDto.getMovieId()
-                    );
+                    Movie movie = movieRepository.findById(recommendationDto.getMovieId())
+                            .orElseThrow();
 
                     return RecommendationViewDto.builder()
                             .movieId(movie.getId())
                             .title(movie.getTitle())
                             .posterUrl(movie.getPosterUrl())
                             .genre(movie.getGenre())
-                            .averageRating(reviewService.getAverageRating(movie.getId()))
+                            .averageRating(reviewRepository.getAverageRating(movie.getId()))
                             .reason(recommendationDto.getReason())
                             .score(recommendationDto.getScore())
                             .build();

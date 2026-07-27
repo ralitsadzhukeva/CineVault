@@ -11,6 +11,7 @@ import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.repository.UserRepository;
 import bg.softuni.cinevault.service.ReviewService;
+import bg.softuni.cinevault.service.recommendation.RecommendationService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +23,13 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final MovieRepository movieRepository;
+    private final RecommendationService recommendationService;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository, UserRepository userRepository, MovieRepository movieRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, UserRepository userRepository, MovieRepository movieRepository, RecommendationService recommendationService) {
         this.reviewRepository = reviewRepository;
         this.userRepository = userRepository;
         this.movieRepository = movieRepository;
+        this.recommendationService = recommendationService;
     }
     @Override
     public void addReview(UUID movieId, UUID userId, Integer rating, String comment) {
@@ -43,6 +46,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .comment(comment)
                 .build();
         reviewRepository.save(review);
+        recommendationService.generateRecommendations(user.getId());
     }
 
     @Override
