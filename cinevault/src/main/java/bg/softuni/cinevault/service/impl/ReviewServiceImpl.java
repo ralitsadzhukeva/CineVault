@@ -1,6 +1,7 @@
 package bg.softuni.cinevault.service.impl;
 
 import bg.softuni.cinevault.exception.AccessDeniedException;
+import bg.softuni.cinevault.exception.movie.MovieNotFoundException;
 import bg.softuni.cinevault.exception.review.DuplicateReviewException;
 import bg.softuni.cinevault.exception.review.ReviewNotFoundException;
 import bg.softuni.cinevault.entities.Movie;
@@ -13,11 +14,13 @@ import bg.softuni.cinevault.repository.UserRepository;
 import bg.softuni.cinevault.service.ReviewService;
 import bg.softuni.cinevault.service.recommendation.RecommendationService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
@@ -36,7 +39,12 @@ public class ReviewServiceImpl implements ReviewService {
         User user = userRepository.findById(userId).orElseThrow();
         Movie movie = movieRepository.findById(movieId).orElseThrow();
 
-        if (reviewRepository.existsByMovieAndUser(movie, user)){
+        if (reviewRepository.existsByMovieAndUser(movie, user)) {
+
+            log.warn("User {} attempted to add duplicate review for movie {}.",
+                    user.getUsername(),
+                    movie.getTitle());
+
             throw new DuplicateReviewException();
         }
         Review review = Review.builder()
@@ -45,6 +53,9 @@ public class ReviewServiceImpl implements ReviewService {
                 .rating(rating)
                 .comment(comment)
                 .build();
+
+        log.info("User {} added review for movie {}.", user.getUsername(), movie.getTitle());
+
         reviewRepository.save(review);
         recommendationService.generateRecommendations(user.getId());
     }
@@ -63,12 +74,20 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public void deleteReviewsByMovieId(UUID movieId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(()-> new MovieNotFoundException(movieId));
+
+        reviewRepository.deleteByMovieId(movieId);
+
+        log.info("Deleted all reviews for movie {}.", movie.getTitle());
+
         reviewRepository.deleteByMovieId(movieId);
     }
 
     @Override
     public double getAverageRating(UUID movieId) {
-        Movie movie = movieRepository.findById(movieId).orElseThrow();
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(()-> new MovieNotFoundException(movieId));
 
         List<Review> reviews = reviewRepository.findByMovie(movie);
 
@@ -86,8 +105,18 @@ public class ReviewServiceImpl implements ReviewService {
 
         if (!review.getUser().getId().equals(currentUser.getId())
                 && currentUser.getRole() != Role.ADMIN) {
+            log.warn("User {} attempted to modify review {} without permission.",
+                    currentUser.getUsername(),
+                    id);
+
             throw new AccessDeniedException();
         }
+
+        log.info("User {} deleted review {} for movie {}.",
+                currentUser.getUsername(),
+                id,
+                review.getMovie().getTitle());
+
         reviewRepository.deleteById(id);
     }
 
@@ -103,6 +132,12 @@ public class ReviewServiceImpl implements ReviewService {
 
         review.setRating(rating);
         review.setComment(comment);
+
+        log.info("User {} edited review {} for movie {}.",
+                currentUser.getUsername(),
+                id,
+                review.getMovie().getTitle());
+
         reviewRepository.save(review);
     }
 

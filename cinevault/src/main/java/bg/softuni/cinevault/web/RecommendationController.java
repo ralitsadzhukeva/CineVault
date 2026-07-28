@@ -1,6 +1,5 @@
 package bg.softuni.cinevault.web;
 
-import bg.softuni.cinevault.dto.recommendation.RecommendationDto;
 import bg.softuni.cinevault.dto.recommendation.RecommendationViewDto;
 import bg.softuni.cinevault.entities.User;
 import bg.softuni.cinevault.service.recommendation.RecommendationService;
@@ -20,15 +19,25 @@ public class RecommendationController {
     public RecommendationController(RecommendationService recommendationService) {
         this.recommendationService = recommendationService;
     }
+
     @GetMapping("/recommendations")
     public ModelAndView recommendations(@AuthenticationPrincipal User user) {
 
-        recommendationService.generateRecommendations(user.getId());
+        ModelAndView mav = new ModelAndView("recommendations");
 
         List<RecommendationViewDto> recommendations =
                 recommendationService.getRecommendations(user.getId());
 
-        ModelAndView mav = new ModelAndView("recommendations");
+        RecommendationViewDto topPick = null;
+
+        if (!recommendations.isEmpty()) {
+            topPick = recommendations.get(0);
+            recommendations = recommendations.stream()
+                    .skip(1)
+                    .toList();
+        }
+
+        mav.addObject("topPick", topPick);
         mav.addObject("recommendations", recommendations);
 
         return mav;

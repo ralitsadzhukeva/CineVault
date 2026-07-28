@@ -9,6 +9,7 @@ import bg.softuni.cinevault.exception.user.DuplicateUsernameException;
 import bg.softuni.cinevault.exception.user.UserNotFoundException;
 import bg.softuni.cinevault.repository.UserRepository;
 import bg.softuni.cinevault.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -33,8 +35,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserRegisterDto register(UserRegisterDto userRegisterDto) {
         if (userRepository.findByUsername(userRegisterDto.getUsername()).isPresent()) {
+
+            log.warn("Registration failed. Username already exists: {}",
+                    userRegisterDto.getUsername());
+
             throw new DuplicateUsernameException();
         }
+
         User user = User.builder()
                 .username(userRegisterDto.getUsername())
                 .email(userRegisterDto.getEmail())
@@ -45,13 +52,16 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
+        log.info("User registered successfully. Username: {}",
+                userRegisterDto.getUsername());
+
         return userRegisterDto;
     }
     @Override
     public UserEditDto getUserForEdit(UUID userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow();
+                .orElseThrow(()-> new UserNotFoundException(userId));
 
         return UserEditDto.builder()
                 .firstName(user.getFirstName())
@@ -63,11 +73,15 @@ public class UserServiceImpl implements UserService {
     public void update(UUID userId, UserEditDto userEditDto) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow();
+                .orElseThrow(()-> new UserNotFoundException(userId));
 
         user.setFirstName(userEditDto.getFirstName());
         user.setLastName(userEditDto.getLastName());
         user.setEmail(userEditDto.getEmail());
+
+        log.info("User profile updated. Username: {}, ID: {}",
+                user.getUsername(),
+                userId);
 
         userRepository.save(user);
     }
@@ -77,6 +91,8 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
+
+        Role oldRole = user.getRole();
 
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
@@ -91,14 +107,22 @@ public class UserServiceImpl implements UserService {
 
         user.setRole(role);
 
+        log.info("User role changed. Username: {}, Old role: {}, New role: {}",
+                user.getUsername(),
+                oldRole,
+                role);
+
         userRepository.save(user);
     }
     @Override
     public void deleteUser(UUID id) {
 
         User user = userRepository.findById(id)
-                .orElseThrow(() ->
-                        new UserNotFoundException(id));
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        log.info("User deleted. Username: {}, ID: {}",
+                user.getUsername(),
+                id);
 
         userRepository.delete(user);
     }

@@ -11,36 +11,111 @@
 <body>
 
 <header class="navbar">
+
     <div class="logo">
         <a th:href="@{/home}">🎬 CineVault</a>
     </div>
 
     <nav>
         <ul class="nav-links">
-        <li><a th:href="@{/home}">Home</a></li>
-        <li><a th:href="@{/movies}">Movies</a></li>
-        <li><a th:href="@{/watchlist}">Watchlist</a></li>
-        <li><a th:href="@{/reviews}">My Reviews</a></li>
-        <li><a class="active" th:href="@{/recommendations}">Recommendations</a></li>
-        <li><a th:href="@{/profile}">Profile</a></li>
-        <li>
-            <form th:action="@{/logout}" method="post" class="logout-form">
-                <button type="submit" class="logout-btn">Logout</button>
-            </form>
-        </li>
+            <li><a th:href="@{/home}">Home</a></li>
+            <li><a th:href="@{/movies}">Movies</a></li>
+            <li><a th:href="@{/watchlist}">Watchlist</a></li>
+            <li><a th:href="@{/reviews}">My Reviews</a></li>
+            <li><a class="active" th:href="@{/recommendations}">Recommendations</a></li>
+            <li><a th:href="@{/profile}">Profile</a></li>
+
+            <li>
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="logout-btn">
+                        Logout
+                    </button>
+                </form>
+            </li>
         </ul>
     </nav>
+
 </header>
 
 <main class="recommendations-container">
 
     <section class="recommendations-header">
+
         <h1>Recommended for You 🎬</h1>
 
         <p>
-            Personalized recommendations based on your ratings and watch history.
+            Personalized recommendations based on your ratings.
         </p>
+
+        <form th:action="@{/recommendations/generate}"
+              method="post">
+
+            <button type="submit"
+                    class="details-button">
+                🔄 Refresh Recommendations
+            </button>
+
+        </form>
+
     </section>
+
+    <!-- TOP PICK -->
+
+    <section class="top-pick"
+             th:if="${topPick != null}">
+
+        <h2>⭐ Top Pick For You</h2>
+
+        <div class="top-pick-card">
+
+            <img th:src="${topPick.posterUrl}"
+                 alt="Poster"
+                 onerror="this.src='/images/no-poster.png'">
+
+            <div class="top-pick-info">
+
+                <h1 th:text="${topPick.title}">
+                    Movie Title
+                </h1>
+
+                <p class="match">
+                    <span th:text="${topPick.score}"></span>% Match
+                </p>
+
+                <p class="genre"
+                   th:text="${topPick.genre}">
+                    Genre
+                </p>
+
+                <p class="rating">
+                    ⭐
+                    <span th:text="${#numbers.formatDecimal(topPick.averageRating,1,1)}"></span>/10
+                </p>
+
+                <p class="reason">
+                    <strong>Why we picked it:</strong>
+                    <span th:text="${topPick.reason}"></span>
+                </p>
+
+                <a class="details-button"
+                   th:href="@{/movies/{id}(id=${topPick.movieId})}">
+                    View Movie
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- MORE RECOMMENDATIONS -->
+
+    <h2 class="recommendation-title"
+        th:if="${!#lists.isEmpty(recommendations)}">
+
+        More Recommendations
+
+    </h2>
 
     <section class="movie-grid">
 
@@ -48,27 +123,38 @@
              th:each="recommendation : ${recommendations}">
 
             <img th:src="${recommendation.posterUrl}"
-                 alt="Movie Poster">
+                 alt="Movie Poster"
+                 onerror="this.src='/images/no-poster.png'">
 
             <div class="movie-info">
 
-                <h2 th:text="${recommendation.title}">Movie Title</h2>
+                <h2 th:text="${recommendation.title}">
+                    Movie Title
+                </h2>
 
                 <p class="genre"
                    th:text="${recommendation.genre}">
                     Genre
                 </p>
 
+                <p class="rating">
+                    ⭐
+                    <span th:text="${#numbers.formatDecimal(recommendation.averageRating,1,1)}"></span>/10
+                </p>
+
                 <p class="score">
                     <strong>Match Score:</strong>
-                    <span th:text="${recommendation.score}">95</span>%
+                    <span th:text="${recommendation.score}"></span>%
                 </p>
 
                 <p class="reason">
+
                     <strong>Why recommended:</strong>
+
                     <span th:text="${recommendation.reason}">
-                        Because you enjoy Sci-Fi movies.
+                        Because you enjoy similar movies.
                     </span>
+
                 </p>
 
                 <a class="details-button"
@@ -80,22 +166,27 @@
 
         </div>
 
-        <div th:if="${#lists.isEmpty(recommendations)}"
-             class="empty-state">
-
-            <h2>No recommendations yet</h2>
-
-            <p>
-                Rate more movies and mark them as watched to receive personalized recommendations.
-            </p>
-
-            <a th:href="@{/movies}" class="details-button">
-                Browse Movies
-            </a>
-
-        </div>
-
     </section>
+
+    <!-- EMPTY STATE -->
+
+    <div th:if="${topPick == null}"
+         class="empty-state">
+
+        <h2>No recommendations yet 🎬</h2>
+
+        <p>
+            Rate movies with 8★ or higher to unlock personalized recommendations.
+        </p>
+
+        <a th:href="@{/movies}"
+           class="details-button">
+
+            Browse Movies
+
+        </a>
+
+    </div>
 
 </main>
 

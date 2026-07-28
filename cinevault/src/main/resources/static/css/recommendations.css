@@ -271,4 +271,35 @@ body {
 
     color: #f59e0b;
 
+}.top-pick {
+     margin: 2rem auto;
+ }
+
+.top-pick-card {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    background: #1b1b1b;
+    border-radius: 15px;
+    padding: 2rem;
+}
+
+.top-pick-card img {
+    width: 260px;
+    border-radius: 10px;
+}
+
+.top-pick-info {
+    flex: 1;
+}
+
+.match {
+    font-size: 1.3rem;
+    color: #ffd54f;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+.recommendation-title {
+    margin: 3rem 0 1rem;
 }

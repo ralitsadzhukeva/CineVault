@@ -9,11 +9,13 @@ import bg.softuni.cinevault.service.MovieService;
 import bg.softuni.cinevault.service.ReviewService;
 import bg.softuni.cinevault.service.WatchlistService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
@@ -36,7 +38,9 @@ public class MovieServiceImpl implements MovieService {
                 .description(movieAddDto.getDescription())
                 .posterUrl(movieAddDto.getPosterUrl())
                 .build();
-        
+
+        log.info("Movie added successfully. Title: {}", movie.getTitle());
+
         return movieRepository.save(movie);
     }
 
@@ -55,14 +59,24 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Transactional
     public void deleteMovie(UUID id) {
+        Movie movie = movieRepository.findById(id)
+            .orElseThrow(() -> new MovieNotFoundException(id));
+
         watchlistService.deleteAllByMovie(id);
         reviewService.deleteReviewsByMovieId(id);
-        movieRepository.deleteById(id);
+        movieRepository.delete(movie);
+
+
+        log.info("Movie deleted successfully. ID: {}, Title: {}",
+                id,
+                movie.getTitle());
     }
 
     @Override
     public MovieEditDto getMovieForEdit(UUID id) {
-        Movie movie = movieRepository.findById(id).orElseThrow();
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(()->new MovieNotFoundException(id));
+
         MovieEditDto movieEditDto = new MovieEditDto();
 
         movieEditDto.setTitle(movie.getTitle());
@@ -77,7 +91,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void updateMovie(UUID id, MovieEditDto movieEditDto) {
-        Movie movie = movieRepository.findById(id).orElseThrow();
+        Movie movie = movieRepository.findById(id).orElseThrow(()->new MovieNotFoundException(id));
 
         movie.setTitle(movieEditDto.getTitle());
         movie.setDirector(movieEditDto.getDirector());
@@ -87,13 +101,19 @@ public class MovieServiceImpl implements MovieService {
         movie.setPosterUrl(movieEditDto.getPosterUrl());
 
         movieRepository.save(movie);
+
+
+        log.info("Movie updated successfully. ID: {}, Title: {}",
+                movie.getId(),
+                movie.getTitle());
     }
 
     @Override
     public List<Movie> searchMovies(String keyword) {
-        if (keyword == null && keyword.isBlank()) {
+        if (keyword == null || keyword.isBlank()) {
             return movieRepository.findAll();
         }
+        log.info("Searching for movies with keyword: {}", keyword);
         return movieRepository.findByTitleContainingIgnoreCase(keyword.trim());
     }
 }

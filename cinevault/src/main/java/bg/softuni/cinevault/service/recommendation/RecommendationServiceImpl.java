@@ -2,16 +2,19 @@ package bg.softuni.cinevault.service.recommendation;
 
 import bg.softuni.cinevault.dto.recommendation.*;
 import bg.softuni.cinevault.entities.Movie;
+import bg.softuni.cinevault.exception.movie.MovieNotFoundException;
 import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.service.MovieService;
 import bg.softuni.cinevault.service.ReviewService;
 import bg.softuni.cinevault.service.recommendation.client.RecommendationClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class RecommendationServiceImpl implements RecommendationService{
     private final RecommendationClient recommendationClient;
@@ -53,7 +56,11 @@ public class RecommendationServiceImpl implements RecommendationService{
                 .build();
 
         recommendationClient.generateRecommendations(request);
-    }
+
+        log.info("Recommendations generated successfully for user {}. Watched movies: {}, Available movies: {}",
+                userId,
+                watchedMovies.size(),
+                allMovies.size());    }
 
     @Override
     public List<RecommendationViewDto> getRecommendations(UUID userId) {
@@ -61,6 +68,8 @@ public class RecommendationServiceImpl implements RecommendationService{
                 recommendationClient.getRecommendations(userId);
 
         if (recommendations == null || recommendations.isEmpty()) {
+            log.warn("No recommendations found for user {}.", userId);
+
             return List.of();
         }
 
@@ -68,7 +77,7 @@ public class RecommendationServiceImpl implements RecommendationService{
                 .map(recommendationDto -> {
 
                     Movie movie = movieRepository.findById(recommendationDto.getMovieId())
-                            .orElseThrow();
+                            .orElseThrow(()-> new MovieNotFoundException(recommendationDto.getMovieId()));
 
                     return RecommendationViewDto.builder()
                             .movieId(movie.getId())
@@ -87,5 +96,7 @@ public class RecommendationServiceImpl implements RecommendationService{
     @Override
     public void deleteRecommendations(UUID userId) {
         recommendationClient.deleteRecommendations(userId);
+
+        log.info("Deleted all recommendations for user {}.", userId);
     }
 }
