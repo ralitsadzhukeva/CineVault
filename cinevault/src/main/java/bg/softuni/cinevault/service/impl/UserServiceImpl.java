@@ -4,11 +4,14 @@ import bg.softuni.cinevault.dto.user.UserEditDto;
 import bg.softuni.cinevault.dto.user.UserRegisterDto;
 import bg.softuni.cinevault.entities.User;
 import bg.softuni.cinevault.enums.Role;
+import bg.softuni.cinevault.exception.AccessDeniedException;
 import bg.softuni.cinevault.exception.user.DuplicateUsernameException;
 import bg.softuni.cinevault.exception.user.UserNotFoundException;
 import bg.softuni.cinevault.repository.UserRepository;
 import bg.softuni.cinevault.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +71,37 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
     }
+
+    @Override
+    public void changeRole(UUID userId, Role role) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        User currentUser = (User) authentication.getPrincipal();
+
+        if (currentUser.getId().equals(user.getId())
+                && role == Role.USER) {
+
+            throw new AccessDeniedException();
+        }
+
+        user.setRole(role);
+
+        userRepository.save(user);
+    }
+    @Override
+    public void deleteUser(UUID id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new UserNotFoundException(id));
+
+        userRepository.delete(user);
+    }
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
@@ -77,5 +111,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .orElseThrow(()-> new UserNotFoundException(id));
     }
+
 
 }

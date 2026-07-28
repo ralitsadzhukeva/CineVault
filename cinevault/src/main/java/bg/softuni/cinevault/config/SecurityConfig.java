@@ -22,7 +22,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/movies/add/**",
                                 "/movies/edit/**",
-                                "/movies/delete/**")
+                                "/movies/delete/**",
+                                "/admin/**")
                         .hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
