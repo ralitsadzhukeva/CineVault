@@ -10,6 +10,8 @@ import bg.softuni.cinevault.service.ReviewService;
 import bg.softuni.cinevault.service.WatchlistService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +29,7 @@ public class MovieServiceImpl implements MovieService {
         this.reviewService = reviewService;
         this.watchlistService = watchlistService;
     }
-
+    @CacheEvict(value = "movies", allEntries = true)
     @Override
     public Movie add(MovieAddDto movieAddDto) {
         Movie movie =Movie.builder()
@@ -43,11 +45,13 @@ public class MovieServiceImpl implements MovieService {
 
         return movieRepository.save(movie);
     }
-
+    @Cacheable("movies")
     @Override
     public List<Movie> findAll() {
         return movieRepository.findAll();
     }
+
+    @Cacheable(value = "movies", key = "#id")
 
     @Override
     public Movie findById(UUID id) {
@@ -55,7 +59,7 @@ public class MovieServiceImpl implements MovieService {
                 .findById(id)
                 .orElseThrow(()->new MovieNotFoundException(id));
     }
-
+    @CacheEvict(value = "movies", key = "#id")
     @Override
     @Transactional
     public void deleteMovie(UUID id) {
@@ -88,7 +92,7 @@ public class MovieServiceImpl implements MovieService {
 
         return movieEditDto;
     }
-
+    @CacheEvict(value = "movies", key = "#id")
     @Override
     public void updateMovie(UUID id, MovieEditDto movieEditDto) {
         Movie movie = movieRepository.findById(id).orElseThrow(()->new MovieNotFoundException(id));
@@ -108,6 +112,7 @@ public class MovieServiceImpl implements MovieService {
                 movie.getTitle());
     }
 
+    @Cacheable(value = "movieSearch", key = "#keyword")
     @Override
     public List<Movie> searchMovies(String keyword) {
         if (keyword == null || keyword.isBlank()) {

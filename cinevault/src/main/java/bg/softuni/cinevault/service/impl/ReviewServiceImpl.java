@@ -15,6 +15,9 @@ import bg.softuni.cinevault.service.ReviewService;
 import bg.softuni.cinevault.service.recommendation.RecommendationService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
         this.movieRepository = movieRepository;
         this.recommendationService = recommendationService;
     }
+    @CacheEvict(value = "ratings", key = "#movieId")
     @Override
     public void addReview(UUID movieId, UUID userId, Integer rating, String comment) {
         User user = userRepository.findById(userId).orElseThrow();
@@ -81,22 +85,18 @@ public class ReviewServiceImpl implements ReviewService {
 
         log.info("Deleted all reviews for movie {}.", movie.getTitle());
 
-        reviewRepository.deleteByMovieId(movieId);
     }
 
+    @Cacheable(value = "ratings", key="#movieId")
     @Override
     public double getAverageRating(UUID movieId) {
-        Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(()-> new MovieNotFoundException(movieId));
-
-        List<Review> reviews = reviewRepository.findByMovie(movie);
-
-        return reviews.stream()
-                .mapToInt(Review::getRating)
-                .average()
-                .orElse(0);
+        return reviewRepository.getAverageRating(movieId);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "ratings", allEntries = true),
+            @CacheEvict(value = "recommendations", key = "#currentUser.id")
+    })
     @Override
     public void deleteReview(UUID id, User currentUser) {
         Review review = reviewRepository.findById(id)
@@ -120,6 +120,10 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.deleteById(id);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "ratings", allEntries = true),
+            @CacheEvict(value = "recommendations", key = "#currentUser.id")
+    })
     @Override
     public void editReview(UUID id, User currentUser, Integer rating, String comment){
         Review review = reviewRepository.findById(id)

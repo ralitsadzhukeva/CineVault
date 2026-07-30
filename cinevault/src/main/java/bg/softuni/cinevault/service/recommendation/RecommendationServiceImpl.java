@@ -9,6 +9,8 @@ import bg.softuni.cinevault.service.MovieService;
 import bg.softuni.cinevault.service.ReviewService;
 import bg.softuni.cinevault.service.recommendation.client.RecommendationClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +30,7 @@ public class RecommendationServiceImpl implements RecommendationService{
         this.reviewRepository = reviewRepository;
 
     }
-
+    @CacheEvict(value = "recommendations", key = "#userId", beforeInvocation = false)
     @Override
     public void generateRecommendations(UUID userId) {
         List<MoviePreferenceDto> watchedMovies = reviewRepository.findByUserId(userId)
@@ -60,8 +62,10 @@ public class RecommendationServiceImpl implements RecommendationService{
         log.info("Recommendations generated successfully for user {}. Watched movies: {}, Available movies: {}",
                 userId,
                 watchedMovies.size(),
-                allMovies.size());    }
+                allMovies.size());
+    }
 
+    @Cacheable(value = "recommendations", key = "#userId")
     @Override
     public List<RecommendationViewDto> getRecommendations(UUID userId) {
         List<RecommendationDto> recommendations =
@@ -92,7 +96,7 @@ public class RecommendationServiceImpl implements RecommendationService{
                 })
                 .toList();
     }
-
+    @CacheEvict(value = "recommendations", key = "#userId")
     @Override
     public void deleteRecommendations(UUID userId) {
         recommendationClient.deleteRecommendations(userId);
