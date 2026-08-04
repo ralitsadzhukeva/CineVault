@@ -8,6 +8,7 @@ import bg.softuni.cinevault.entities.Movie;
 import bg.softuni.cinevault.entities.Review;
 import bg.softuni.cinevault.entities.User;
 import bg.softuni.cinevault.enums.Role;
+import bg.softuni.cinevault.exception.user.UserNotFoundException;
 import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.repository.UserRepository;
@@ -40,8 +41,8 @@ public class ReviewServiceImpl implements ReviewService {
     @CacheEvict(value = "ratings", key = "#movieId")
     @Override
     public void addReview(UUID movieId, UUID userId, Integer rating, String comment) {
-        User user = userRepository.findById(userId).orElseThrow();
-        Movie movie = movieRepository.findById(movieId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(userId));
+        Movie movie = movieRepository.findById(movieId).orElseThrow(()->new MovieNotFoundException(movieId));
 
         if (reviewRepository.existsByMovieAndUser(movie, user)) {
 
@@ -66,7 +67,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<Review> getMovieReviews(UUID movieId) {
-        Movie movie = movieRepository.findById(movieId).orElseThrow();
+        Movie movie = movieRepository.findById(movieId).orElseThrow(()->new MovieNotFoundException(movieId));
         return reviewRepository.findByMovie(movie);
     }
 
@@ -147,6 +148,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review findById(UUID id) {
-        return reviewRepository.findById(id).orElseThrow();
+        return reviewRepository.findById(id).orElseThrow(()->new ReviewNotFoundException(id));
     }
 }
