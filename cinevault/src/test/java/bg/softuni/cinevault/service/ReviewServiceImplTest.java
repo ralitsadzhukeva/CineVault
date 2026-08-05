@@ -1,6 +1,5 @@
 package bg.softuni.cinevault.service;
 
-import bg.softuni.cinevault.dto.review.ReviewAddDto;
 import bg.softuni.cinevault.entities.Movie;
 import bg.softuni.cinevault.entities.Review;
 import bg.softuni.cinevault.entities.User;
@@ -47,9 +46,6 @@ class ReviewServiceImplTest {
 
     @Mock
     private RecommendationService recommendationService;
-
-    @Mock
-    private MovieService movieService;
 
 
     private Review review;
