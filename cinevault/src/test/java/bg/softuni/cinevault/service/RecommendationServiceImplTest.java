@@ -1,4 +1,4 @@
-package bg.softuni.cinevault.service.recommendation;
+package bg.softuni.cinevault.service;
 
 import bg.softuni.cinevault.dto.recommendation.*;
 import bg.softuni.cinevault.entities.Movie;
@@ -7,6 +7,7 @@ import bg.softuni.cinevault.enums.Genre;
 import bg.softuni.cinevault.exception.movie.MovieNotFoundException;
 import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.repository.ReviewRepository;
+import bg.softuni.cinevault.service.recommendation.RecommendationServiceImpl;
 import bg.softuni.cinevault.service.recommendation.client.RecommendationClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
