@@ -60,10 +60,12 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/edit/{id}")
-    public ModelAndView editReview(@PathVariable UUID id) {
+    public ModelAndView editReview(@PathVariable UUID id,
+                                   @AuthenticationPrincipal User user) {
+
         ModelAndView mav = new ModelAndView("review-edit");
 
-        Review review = reviewService.findById(id);
+        Review review = reviewService.findByIdForEdit(id, user);
         mav.addObject("review", review);
 
         return mav;
@@ -73,7 +75,7 @@ public class ReviewController {
     public ModelAndView editReviewConfirm(@PathVariable UUID id,
                                     @Valid @ModelAttribute ReviewAddDto reviewAddDto,
                                     BindingResult bindingResult,
-                                          @AuthenticationPrincipal User currentUser) throws AccessDeniedException {
+                                          @AuthenticationPrincipal User currentUser){
 
         if (bindingResult.hasErrors()) {
             ModelAndView mav = new ModelAndView("review-edit");

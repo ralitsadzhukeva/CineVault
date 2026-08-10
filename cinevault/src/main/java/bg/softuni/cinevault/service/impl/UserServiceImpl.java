@@ -7,7 +7,9 @@ import bg.softuni.cinevault.enums.Role;
 import bg.softuni.cinevault.exception.AccessDeniedException;
 import bg.softuni.cinevault.exception.user.DuplicateUsernameException;
 import bg.softuni.cinevault.exception.user.UserNotFoundException;
+import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.repository.UserRepository;
+import bg.softuni.cinevault.repository.WatchlistRepository;
 import bg.softuni.cinevault.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,15 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReviewRepository reviewRepository;
+    private final WatchlistRepository watchlistRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ReviewRepository reviewRepository, WatchlistRepository watchlistRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.reviewRepository = reviewRepository;
+        this.watchlistRepository = watchlistRepository;
     }
 
     @Override
@@ -124,6 +130,9 @@ public class UserServiceImpl implements UserService {
                 user.getUsername(),
                 id);
 
+        reviewRepository.deleteByUserId(id);
+        watchlistRepository.deleteByUserId(id);
+
         userRepository.delete(user);
     }
     @Override
@@ -135,6 +144,24 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .orElseThrow(()-> new UserNotFoundException(id));
     }
+    @Override
+    public void createDefaultAdmin() {
 
+        if (!userRepository.findByUsername("admin").isPresent()) {
+
+            User admin = User.builder()
+                    .username("admin")
+                    .email("admin@admin.com")
+                    .password(passwordEncoder.encode("adminPass"))
+                    .role(Role.ADMIN)
+                    .createdOn(LocalDateTime.now())
+                    .build();
+
+            userRepository.save(admin);
+
+            log.info("Default admin user created with username [{}].",
+                    admin.getUsername());
+        }
+    }
 
 }

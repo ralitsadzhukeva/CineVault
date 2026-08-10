@@ -150,4 +150,17 @@ public class ReviewServiceImpl implements ReviewService {
     public Review findById(UUID id) {
         return reviewRepository.findById(id).orElseThrow(()->new ReviewNotFoundException(id));
     }
+    @Override
+    public Review findByIdForEdit(UUID id, User currentUser) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new ReviewNotFoundException(id));
+
+        if (!review.getUser().getId().equals(currentUser.getId())
+                && currentUser.getRole() != Role.ADMIN) {
+
+            throw new AccessDeniedException();
+        }
+
+        return review;
+    }
 }

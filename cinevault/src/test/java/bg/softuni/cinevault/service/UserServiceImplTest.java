@@ -7,8 +7,11 @@ import bg.softuni.cinevault.enums.Role;
 import bg.softuni.cinevault.exception.AccessDeniedException;
 import bg.softuni.cinevault.exception.user.DuplicateUsernameException;
 import bg.softuni.cinevault.exception.user.UserNotFoundException;
+import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.repository.UserRepository;
+import bg.softuni.cinevault.repository.WatchlistRepository;
 import bg.softuni.cinevault.service.impl.UserServiceImpl;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +43,12 @@ class UserServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private ReviewRepository reviewRepository;
+
+    @Mock
+    private WatchlistRepository watchlistRepository;
+
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -59,6 +68,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @Transactional
     void register_shouldCreateUser() {
 
         UserRegisterDto dto = UserRegisterDto.builder()
@@ -89,6 +99,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @Transactional
     void register_shouldThrowException_whenUsernameIsTaken() {
         UserRegisterDto dto = UserRegisterDto.builder()
                 .username("miLana")
@@ -125,6 +136,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @Transactional
     void updateUser_shouldReturnUpdatedUser(){
         UUID userId = user.getId();
         when(userRepository.findById(userId))
@@ -156,6 +168,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @Transactional
     void changeRole_shouldChangeRole(){
         UUID userId = user.getId();
 
@@ -216,12 +229,15 @@ class UserServiceImplTest {
     }
 
     @Test
+    @Transactional
     void deleteUser_shouldDeleteUser(){
         UUID userId = user.getId();
         when(userRepository.findById(userId))
                 .thenReturn(Optional.of(user));
 
         userService.deleteUser(userId);
+        verify(reviewRepository).deleteByUserId(userId);
+        verify(watchlistRepository).deleteByUserId(userId);
         verify(userRepository).findById(userId);
         verify(userRepository).delete(user);
     }

@@ -3,6 +3,7 @@ package bg.softuni.cinevault.service.impl;
 import bg.softuni.cinevault.entities.Movie;
 import bg.softuni.cinevault.entities.User;
 import bg.softuni.cinevault.entities.Watchlist;
+import bg.softuni.cinevault.exception.AccessDeniedException;
 import bg.softuni.cinevault.exception.movie.MovieNotFoundException;
 import bg.softuni.cinevault.exception.user.UserNotFoundException;
 import bg.softuni.cinevault.exception.watchlist.WatchlistEntryNotFoundException;
@@ -59,10 +60,13 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public void removeMovie(UUID watchlistId) {
+    public void removeMovie(UUID watchlistId, UUID userId) {
         Watchlist entry = watchlistRepository.findById(watchlistId)
                 .orElseThrow(()-> new WatchlistEntryNotFoundException(watchlistId.toString()));
 
+        if (!entry.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException();
+        }
         log.info("User {} removed movie {} from watchlist.",
                 entry.getUser().getUsername(),
                 entry.getMovie().getTitle());
@@ -71,9 +75,13 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public void markAsWatched(UUID watchlistId) {
+    public void markAsWatched(UUID watchlistId, UUID userId) {
         Watchlist entry = watchlistRepository.findById(watchlistId)
                 .orElseThrow(()-> new WatchlistEntryNotFoundException(watchlistId.toString()));
+
+        if (!entry.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException();
+        }
 
         entry.setWatched(true);
 

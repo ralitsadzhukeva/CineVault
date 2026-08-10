@@ -7,6 +7,7 @@ import bg.softuni.cinevault.enums.Genre;
 import bg.softuni.cinevault.exception.movie.MovieNotFoundException;
 import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.service.impl.MovieServiceImpl;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,6 +84,7 @@ class MovieServiceImplTest {
     }
 
     @Test
+    @Transactional
     void add_shouldCreateAndSaveMovie() {
 
         MovieAddDto movieAddDto = MovieAddDto.builder()
@@ -154,6 +156,7 @@ class MovieServiceImplTest {
     }
 
     @Test
+    @Transactional
     void getMovieForEdit_shouldReturnMovieForEditDto() {
         when(movieRepository.findById(movie.getId()))
                 .thenReturn(Optional.of(movie));
@@ -190,6 +193,7 @@ class MovieServiceImplTest {
     }
 
     @Test
+    @Transactional
     void updateMovie_shouldUpdateMovie() {
         UUID movieId = movie.getId();
 
@@ -218,6 +222,7 @@ class MovieServiceImplTest {
     }
 
     @Test
+    @Transactional
     void updateMovie_shouldThrowException_whenMovieDoesNotExist() {
         UUID movieId = UUID.randomUUID();
         MovieEditDto dto = new MovieEditDto();
@@ -228,6 +233,7 @@ class MovieServiceImplTest {
     }
 
     @Test
+    @Transactional
     void deleteMovie_shouldDeleteMovie() {
         UUID movieId = movie.getId();
 
@@ -241,6 +247,7 @@ class MovieServiceImplTest {
         verify(movieRepository).delete(movie);
     }
     @Test
+
     void deleteMovie_shouldThrowException_whenMovieDoesNotExist() {
         UUID movieId = UUID.randomUUID();
         when(movieRepository.findById(movieId))

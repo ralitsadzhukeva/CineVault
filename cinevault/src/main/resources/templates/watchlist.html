@@ -58,17 +58,23 @@
 
             <div class="actions">
 
-                <a th:href="@{/watchlist/remove/{id}(id=${entry.id})}"
-                   class="btn danger">
-                    Remove
-                </a>
-                <a th:href="@{/watchlist/watched/{id}(id=${entry.id})}"
-                   class="btn"
-                   th:classappend="${entry.watched} ? 'disabled' : ''">
-                    <span th:text="${entry.watched} ? 'Watched ✓' : 'Mark as Watched'">
-                      Mark as Watched
-                     </span>
-                </a>
+                <form th:action="@{/watchlist/remove/{watchlistId}(watchlistId=${entry.id})}"
+                      method="post">
+                    <button type="submit" class="btn danger">
+                        Remove
+                    </button>
+                </form>
+                <form th:action="@{/watchlist/watched/{watchlistId}(watchlistId=${entry.id})}"
+                      method="post">
+
+                    <button type="submit"
+                            class="btn"
+                            th:disabled="${entry.watched}">
+                         <span th:text="${entry.watched} ? 'Watched ✓' : 'Mark as Watched'">
+                           Mark as Watched
+                         </span>
+                    </button>
+                </form>
                 <div th:if="${entry.watched}" class="review-box">
                     <form th:action="@{/review/add/{movieId}(movieId=${entry.movie.id})}"
                           method="post">

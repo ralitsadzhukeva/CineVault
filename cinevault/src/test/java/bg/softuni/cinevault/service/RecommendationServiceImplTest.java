@@ -9,6 +9,7 @@ import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.service.recommendation.RecommendationServiceImpl;
 import bg.softuni.cinevault.service.recommendation.client.RecommendationClient;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -187,6 +189,7 @@ class RecommendationServiceImplTest {
         assertEquals(95, dto.getScore());
     }
     @Test
+    @Transactional
     void getRecommendations_shouldThrowException_whenMovieDoesNotExist() {
 
         UUID userId = UUID.randomUUID();
@@ -204,12 +207,13 @@ class RecommendationServiceImplTest {
         when(movieRepository.findById(movieId))
                 .thenReturn(java.util.Optional.empty());
 
-        org.junit.jupiter.api.Assertions.assertThrows(
+       assertThrows(
                 MovieNotFoundException.class,
                 () -> recommendationService.getRecommendations(userId)
         );
     }
     @Test
+    @Transactional
     void deleteRecommendations_shouldCallRecommendationClient() {
 
         UUID userId = UUID.randomUUID();
@@ -236,6 +240,7 @@ class RecommendationServiceImplTest {
                 .getRecommendations(userId);
     }
     @Test
+    @Transactional
     void generateRecommendations_shouldHandleUserWithNoReviews() {
 
         UUID userId = UUID.randomUUID();
@@ -271,6 +276,7 @@ class RecommendationServiceImplTest {
                 .getRecommendations(userId);
     }
     @Test
+    @Transactional
     void getRecommendations_shouldMapMultipleRecommendations() {
 
         UUID userId = UUID.randomUUID();

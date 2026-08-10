@@ -29,10 +29,11 @@ public class MovieServiceImpl implements MovieService {
         this.reviewService = reviewService;
         this.watchlistService = watchlistService;
     }
-    @CacheEvict(value = "movies", allEntries = true)
+
+    @CacheEvict(value = {"movies", "movieSearch"}, allEntries = true)
     @Override
     public Movie add(MovieAddDto movieAddDto) {
-        Movie movie =Movie.builder()
+        Movie movie = Movie.builder()
                 .title(movieAddDto.getTitle())
                 .director(movieAddDto.getDirector())
                 .genre(movieAddDto.getGenre())
@@ -41,9 +42,11 @@ public class MovieServiceImpl implements MovieService {
                 .posterUrl(movieAddDto.getPosterUrl())
                 .build();
 
-        log.info("Movie added successfully. Title: {}", movie.getTitle());
+        Movie savedMovie = movieRepository.save(movie);
 
-        return movieRepository.save(movie);
+        log.info("Movie added successfully. Title: {}", savedMovie.getTitle());
+
+        return savedMovie;
     }
     @Cacheable("movies")
     @Override
@@ -52,14 +55,13 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Cacheable(value = "movies", key = "#id")
-
     @Override
     public Movie findById(UUID id) {
         return movieRepository
                 .findById(id)
                 .orElseThrow(()->new MovieNotFoundException(id));
     }
-    @CacheEvict(value = "movies", key = "#id")
+    @CacheEvict(value = {"movies", "movieSearch"}, allEntries = true)
     @Override
     @Transactional
     public void deleteMovie(UUID id) {
@@ -92,7 +94,7 @@ public class MovieServiceImpl implements MovieService {
 
         return movieEditDto;
     }
-    @CacheEvict(value = "movies", key = "#id")
+    @CacheEvict(value = {"movies", "movieSearch"}, allEntries = true)
     @Override
     public void updateMovie(UUID id, MovieEditDto movieEditDto) {
         Movie movie = movieRepository.findById(id).orElseThrow(()->new MovieNotFoundException(id));

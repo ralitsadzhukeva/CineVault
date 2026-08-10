@@ -15,6 +15,7 @@ import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.repository.UserRepository;
 import bg.softuni.cinevault.service.impl.ReviewServiceImpl;
 import bg.softuni.cinevault.service.recommendation.RecommendationService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,6 +78,7 @@ class ReviewServiceImplTest {
     }
 
     @Test
+    @Transactional
     void addReview_shouldCreateReviewAndGenerateRecommendations() {
 
         UUID movieId = movie.getId();
@@ -238,6 +240,7 @@ class ReviewServiceImplTest {
         verify(reviewRepository).getAverageRating(movieId);
     }
     @Test
+    @Transactional
     void deleteReview_shouldDeleteReview() {
         UUID reviewId = review.getId();
 
@@ -262,6 +265,7 @@ class ReviewServiceImplTest {
     }
 
     @Test
+    @Transactional
     void deleteReview_shouldThrowException_whenUserDoesNotHavePermission() {
         UUID reviewId = review.getId();
         User differentUser = User.builder()
@@ -278,6 +282,7 @@ class ReviewServiceImplTest {
     }
 
     @Test
+    @Transactional
     void editReview_shouldEditReview() {
         UUID reviewId = review.getId();
 
@@ -313,6 +318,7 @@ class ReviewServiceImplTest {
     }
 
     @Test
+    @Transactional
     void editReview_shouldThrowException_whenUserDoesNotHavePermission() {
         UUID reviewId = review.getId();
         User differentUser = User.builder()
@@ -343,5 +349,55 @@ class ReviewServiceImplTest {
         when(reviewRepository.findById(reviewId))
                 .thenReturn(Optional.empty());
         assertThrows(ReviewNotFoundException.class, () -> reviewService.findById(reviewId));
+    }
+    @Test
+    void findByIdForEdit_shouldReturnReview_whenUserOwnsReview() {
+        UUID reviewId = review.getId();
+
+        when(reviewRepository.findById(reviewId))
+                .thenReturn(Optional.of(review));
+
+        Review result = reviewService.findByIdForEdit(reviewId, user);
+
+        assertNotNull(result);
+        assertEquals(review, result);
+
+        verify(reviewRepository).findById(reviewId);
+    }
+
+    @Test
+    void findByIdForEdit_shouldThrowException_whenReviewDoesNotExist() {
+        UUID reviewId = UUID.randomUUID();
+
+        when(reviewRepository.findById(reviewId))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                ReviewNotFoundException.class,
+                () -> reviewService.findByIdForEdit(reviewId, user)
+        );
+
+        verify(reviewRepository).findById(reviewId);
+    }
+
+    @Test
+    void findByIdForEdit_shouldThrowException_whenUserNotPermitted() {
+        UUID reviewId = review.getId();
+
+        User differentUser = User.builder()
+                .id(UUID.randomUUID())
+                .username("differentUser")
+                .role(Role.USER)
+                .build();
+
+        when(reviewRepository.findById(reviewId))
+                .thenReturn(Optional.of(review));
+
+        assertThrows(
+                AccessDeniedException.class,
+                () -> reviewService.findByIdForEdit(reviewId, differentUser)
+        );
+
+        verify(reviewRepository).findById(reviewId);
     }
 }

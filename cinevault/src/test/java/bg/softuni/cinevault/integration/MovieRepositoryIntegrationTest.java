@@ -9,6 +9,7 @@ import bg.softuni.cinevault.exception.movie.MovieNotFoundException;
 import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +33,7 @@ class MovieRepositoryIntegrationTest {
     private UserRepository userRepository;
 
     @Test
+    @Transactional
     void shouldSaveAndFindMovie() {
 
         Movie movie = Movie.builder()
@@ -55,7 +57,9 @@ class MovieRepositoryIntegrationTest {
         assertEquals("Notting Hill", foundMovie.getTitle());
         assertEquals(Genre.ROMANCE, foundMovie.getGenre());
     }
+
     @Test
+    @Transactional
     void shouldCheckIfReviewExistsForMovieAndUser() {
 
         Movie movie = Movie.builder()
@@ -94,7 +98,9 @@ class MovieRepositoryIntegrationTest {
 
         assertTrue(exists);
     }
+
     @Test
+    @Transactional
     void shouldFindReviewsByUserId() {
 
         Movie movie = Movie.builder()
@@ -135,7 +141,9 @@ class MovieRepositoryIntegrationTest {
         assertNotNull(reviews);
         assertEquals(1, reviews.size());
         assertEquals(8, reviews.get(0).getRating());
-    }@Test
+    }
+    @Test
+    @Transactional
     void shouldCalculateAverageRating() {
 
         Movie movie = Movie.builder()

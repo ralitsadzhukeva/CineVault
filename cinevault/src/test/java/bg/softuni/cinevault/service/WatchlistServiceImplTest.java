@@ -12,6 +12,7 @@ import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.repository.UserRepository;
 import bg.softuni.cinevault.repository.WatchlistRepository;
 import bg.softuni.cinevault.service.impl.WatchlistServiceImpl;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -76,6 +77,7 @@ class WatchlistServiceImplTest {
     }
 
     @Test
+    @Transactional
     void addMovie_shouldAddMovieToWatchlist(){
         UUID movieId = movie.getId();
         UUID userId = user.getId();
@@ -152,6 +154,7 @@ class WatchlistServiceImplTest {
     }
 
     @Test
+    @Transactional
     void addToWatchlist_shouldNotAddMovie_whenMovieIsAlreadyInWatchlist() {
 
         UUID movieId = movie.getId();
@@ -181,6 +184,7 @@ class WatchlistServiceImplTest {
                 .save(any(Watchlist.class));
     }
     @Test
+    @Transactional
     void getUserWatchlist_shouldReturnUserWatchlist(){
         UUID userId = user.getId();
 
@@ -202,13 +206,15 @@ class WatchlistServiceImplTest {
     }
 
     @Test
+    @Transactional
     void removeMovieFromWatchlist_shouldRemoveMovieFromWatchlist(){
         UUID watchlistId = watchlist.getId();
+        UUID userId = user.getId();
 
         when(watchlistRepository.findById(watchlistId))
                 .thenReturn(Optional.of(watchlist));
 
-        watchlistService.removeMovie(watchlistId);
+        watchlistService.removeMovie(watchlistId,userId);
 
         verify(watchlistRepository).findById(watchlistId);
         verify(watchlistRepository).delete(watchlist);
@@ -217,24 +223,27 @@ class WatchlistServiceImplTest {
     @Test
     void removeMovieFromWatchlist_shouldThrowAnException_whenWatchlistDoesNotExist(){
         UUID watchlistId = watchlist.getId();
+        UUID userId = user.getId();
 
         when(watchlistRepository.findById(watchlistId))
                 .thenReturn(Optional.empty());
 
-        assertThrows(WatchlistEntryNotFoundException.class,()->watchlistService.removeMovie(watchlistId));
+        assertThrows(WatchlistEntryNotFoundException.class,()->watchlistService.removeMovie(watchlistId,userId));
 
         verify(watchlistRepository).findById(watchlistId);
         verify(watchlistRepository,never()).delete(any(Watchlist.class));
     }
 
     @Test
+    @Transactional
     void markAsWatched_shouldMarkMovieAsWatched(){
         UUID watchlistId = watchlist.getId();
+        UUID userId = user.getId();
 
         when(watchlistRepository.findById(watchlistId))
                 .thenReturn(Optional.of(watchlist));
 
-        watchlistService.markAsWatched(watchlistId);
+        watchlistService.markAsWatched(watchlistId,userId);
 
         assertTrue(watchlist.getWatched());
 
@@ -245,11 +254,12 @@ class WatchlistServiceImplTest {
     @Test
     void markAsWatched_shouldThrowAnException_whenWatchlistDoesNotExist(){
         UUID watchlistId = watchlist.getId();
+        UUID userId = user.getId();
 
         when(watchlistRepository.findById(watchlistId))
                 .thenReturn(Optional.empty());
 
-        assertThrows(WatchlistEntryNotFoundException.class,()->watchlistService.markAsWatched(watchlistId));
+        assertThrows(WatchlistEntryNotFoundException.class,()->watchlistService.markAsWatched(watchlistId,userId));
 
         verify(watchlistRepository).findById(watchlistId);
 
@@ -257,6 +267,7 @@ class WatchlistServiceImplTest {
     }
 
     @Test
+    @Transactional
     void deleteAllByMovie_shouldDeleteAllWatchlistEntries(){
         UUID movieId = movie.getId();
 

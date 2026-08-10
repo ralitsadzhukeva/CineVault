@@ -18,4 +18,5 @@ public interface ReviewService {
     void editReview(UUID id, User currentUser, Integer rating, String comment);
 
     Review findById(UUID id);
+    Review findByIdForEdit(UUID id, User currentUser);
 }

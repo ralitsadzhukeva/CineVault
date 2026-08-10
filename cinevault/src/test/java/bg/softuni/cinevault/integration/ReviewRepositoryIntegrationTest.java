@@ -8,6 +8,7 @@ import bg.softuni.cinevault.enums.Role;
 import bg.softuni.cinevault.repository.MovieRepository;
 import bg.softuni.cinevault.repository.ReviewRepository;
 import bg.softuni.cinevault.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,7 @@ class ReviewRepositoryIntegrationTest {
     private UserRepository userRepository;
 
     @Test
+    @Transactional
     void shouldSaveAndFindReviewByMovie() {
 
         Movie movie = Movie.builder()
@@ -74,6 +76,7 @@ class ReviewRepositoryIntegrationTest {
     }
 
     @Test
+    @Transactional
     void shouldCheckIfReviewExistsForMovieAndUser() {
 
         Movie movie = Movie.builder()
@@ -114,6 +117,7 @@ class ReviewRepositoryIntegrationTest {
     }
 
     @Test
+    @Transactional
     void shouldFindReviewsByUserId() {
 
         Movie movie = Movie.builder()
@@ -158,6 +162,7 @@ class ReviewRepositoryIntegrationTest {
 
 
     @Test
+    @Transactional
     void shouldCalculateAverageRating() {
 
         Movie movie = Movie.builder()

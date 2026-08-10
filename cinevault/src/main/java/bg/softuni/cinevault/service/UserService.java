@@ -16,4 +16,5 @@ public interface UserService {
     void update(UUID userId, UserEditDto userEditDto);
     void changeRole(UUID userId, Role role);
     void deleteUser(UUID id);
+    void createDefaultAdmin();
 }

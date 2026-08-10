@@ -34,6 +34,7 @@ class WatchlistRepositoryIntegrationTest {
 
 
     @Test
+    @Transactional
     void shouldFindWatchlistByUser() {
 
         User user = User.builder()
@@ -78,6 +79,7 @@ class WatchlistRepositoryIntegrationTest {
     }
 
     @Test
+    @Transactional
     void shouldCheckIfMovieIsAlreadyInWatchlist() {
 
         User user = User.builder()
